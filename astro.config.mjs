@@ -4,6 +4,7 @@ import starlight from "@astrojs/starlight";
 
 // https://astro.build/config
 export default defineConfig({
+	site: "https://mcdocs.zade.viggers.net/",
 	integrations: [
 		starlight({
 			title: "MC:JE Technical Docs",
