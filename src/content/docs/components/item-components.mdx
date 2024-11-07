@@ -309,12 +309,16 @@ Most components add new functionality, but some replicate functionality that was
 - Format: integer id
   - e.g. `map_id=1`
 
-### `minecraft:custom_model_data` <Badge text="Replaces NBT feature" variant="note" />
+### `minecraft:custom_model_data` <Badge text="Replaces NBT feature" variant="note" /> <Badge text="Changed in 1.21.4" variant="caution" />
 
 - Can be used to replace the models of items by selecting for the `minecraft:custom_model_data` property in the item model
 - Replaces `CustomModelData` tag
-- Format: integer value
-  - e.g. `custom_model_data=43`
+- Format: object with fields
+  - `floats` - list of floats.
+  - `flags` - list of booleans.
+  - `strings` - list of strings.
+  - `colors` - list of RGB color values
+  - These lists of values are accessed by the various model property getters
 - Can be modified with the `set_custom_model_data` loot function
 
 ### `minecraft:potion_contents` <Badge text="Replaces NBT feature" variant="note" /> <Badge text="Changed in 1.21.2" variant="caution" />
@@ -613,11 +617,13 @@ Most components add new functionality, but some replicate functionality that was
   - e.g. `container_loot={loot_table:'minecraft:chests/buried_treasure',seed:123}`
 - Can be modified with the `set_loot_table` loot function
 
-### `minecraft:block_entity_data` <Badge text="Replaces NBT feature" variant="note" />
+### `minecraft:block_entity_data` <Badge text="Replaces NBT feature" variant="note" /> <Badge text="Changed in 1.21.4" variant="caution" />
 
 - Stores unstructured NBT data to apply to a block entity when placing a block such as a Chest or Furnace
 - Replaces previous `BlockEntityTag` tag, with same behavior
 - Any block entity data moved into a dedicated item component is removed from this tag
+- Item blocks with this component only set block entity data only if `id` tag matches type of placed block entity
+  - Additionally, a warning will be added to item tooltip if placing such item might directly or indirectly lead to command execution with high permission level. This cannot be hidden by any other component.
 - For Command Blocks, Lecterns, Signs, and Spawners: this tag will not be copied unless the player is an operator
 - Format: object with fields
   - Must contain an `id` field with the block entity type
@@ -807,14 +813,14 @@ Most components add new functionality, but some replicate functionality that was
 - Format: namespaced ID
   - `namespace:id` will reference model `/assets/<namespace>/models/item/<id>`
 
-### `minecraft:equippable` <Badge text="Since 1.21.2" variant="tip" />
+### `minecraft:equippable` <Badge text="Since 1.21.2" variant="tip" /> <Badge text="Changed in 1.21.4" variant="caution" />
 
 - If present, this item can be equipped by players in the selected slot
 - Format: object with fields
   - `slot`: one of `head`, `chest`, `legs`, `feet`, `body`, `mainhand`, or `offhand`
   - `equip_sound` (optional): Sound event to play when the item is equipped
     - If not specified, the default armor equip sound will be played
-  - `model` (optional): namespaced ID of the equipment model to use when equipped
+  - `asset_id` (optional): namespaced ID of the equipment model to use when equipped
     - These model definitions are loaded from Resource Packs
     - If not specified, will fall back to rendering as the item itself when in the head slot (or no rendering if not applicable)
   - `camera_overlay` (optional): namespaced ID of the overlay texture to use when equipped
