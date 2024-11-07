@@ -1,0 +1,863 @@
+---
+title: Item Components
+description: A system for customising all aspects of an item
+---
+
+import { Badge, Aside } from "@astrojs/starlight/components";
+
+<Badge text="Since 1.20.5" variant="tip" />
+
+A system for customising all aspects
+of an item. Replaces the old NBT system for item customisation.
+
+- Item types (e.g. `minecraft:stick`) hold a set of default components on an item that individual item stacks can override
+- When advanced tooltips are enabled (F3+H), the number of components will be displayed instead of number of tags
+- Default component values for items are now listed in `items.json` generated in `reports` directory
+
+## Item Syntax
+
+- Components are specified after the item name in square brackets
+  - Components are assigned with an `=` (e.g. `wooden_pickaxe[damage=23]`)
+  - Components are comma-separated (e.g. `netherite_hoe[damage=5,repair_cost=2]`)
+- Component types will be autocompleted, but possible values of them will not
+- Values will however be validated, and the command will fail to parse if the component is improperly specified
+  - e.g. `/give @s wooden_pickaxe[damage=-34]` is not valid
+- The previous NBT syntax (`{...}`) has been removed, and replaced with `custom_data` assignment
+  - e.g. `/give @s stick{foo:'bar'}` becomes `/give @s stick[custom_data={foo:'bar'}]`
+
+## Components on block entities
+
+Non-default components on item stacks containing block items are now stored on block entities when placed.
+
+- Component removals from defaults are currently not preserved
+- Placing and breaking non-block entity blocks remains unchanged - nothing is preserved
+- Does not automatically cause preserved components to be restored on drops - this requires addition of `copy_components` function to loot table
+- Components are stored in field called `components`
+  - Some components (like `custom_name`) are still handled by legacy serialization, which means they might not be present in there
+  - Contains map of component id to component value
+
+## Crafting
+
+Most recipe types now accept `components` for the `result` item stack. This enables the long-requested 'NBT crafting'.
+
+`components` is allowed on `result` for these recipe types:
+
+- `crafting_shaped`
+- `crafting_shapeless`
+- `stonecutting`
+- `smithing_transform`
+- `smelting`
+- `blasting`
+- `smoking`
+- `campfire_cooking`
+
+When `crafting_transmute` is used, the item type changes but all item components are preserved.
+
+## Component reference
+
+Most components add new functionality, but some replicate functionality that was available with the NBT system.
+
+### `minecraft:custom_data` <Badge text="Replaces NBT feature" variant="note" />
+
+- Can be used for custom data storage on an item
+- When upgrading a world, any non-game data in the item `tag` will be moved into here
+- Format: object with any fields
+  - e.g. `custom_data={some:'data'}`
+- Can be modified with the `set_custom_data` and `copy_custom_data` loot functions
+- Can be specified as an SNBT string to preserve type information in JSON
+  - This is the same as is used in the `set_custom_data` loot function and `custom_data` predicate
+
+### `minecraft:damage` <Badge text="Replaces NBT feature" variant="note" />
+
+- The amount of durability removed from an item
+- If removed, the item will not be damageable
+- Replaces `Damage` tag
+- Format: non-negative integer
+  - e.g. `damage=12`
+- For damageable items (with the [`max_damage` component](#minecraftmax_damage)), has an implicit default value of: `0`
+- Can be modified with the `set_damage` loot function
+
+### `minecraft:repair_cost` <Badge text="Replaces NBT feature" variant="note" />
+
+- The additional experience cost required to modify an item in an Anvil
+- Replaces `RepairCost` tag
+- Format: non-negative integer
+  - e.g. `repair_cost=12`
+- If not set, has an implicit default value of: `0`
+
+### `minecraft:unbreakable` <Badge text="Replaces NBT feature" variant="note" />
+
+- If set, the item will not lose any durability when used
+- Replaces `Unbreakable` boolean tag
+- Format: object with fields
+  - `show_in_tooltip`: boolean (default: `true`)
+    - If `true`, an 'Unbreakable' line will be included in the tooltip
+    - Replaces 3rd bit of `HideFlags` tag
+  - e.g. `unbreakable={}`, `unbreakable={show_in_tooltip:false}`
+
+### `minecraft:enchantments` <Badge text="Replaces NBT feature" variant="note" />
+
+- Stores a list of enchantments and their levels on an item
+- Replaces `Enchantments` tag
+- Format: object with fields
+  - `levels`: object of enchantment (id string) to level (integer [0; 255])
+  - `show_in_tooltip`: boolean (default: `true`)
+    - If `false`, no enchantments will be shown in the item tooltip
+    - Replaces 1st bit of `HideFlags` tag
+  - e.g. `enchantments={levels:{'minecraft:protection':2},show_in_tooltip:false}`
+  - Alternatively, can be defined as an inline map of enchantment id to level
+    - e.g. `enchantments={sharpness:1}`
+- If not set, has an implicit default value of: `{levels:{}}`
+- Can be modified with the `set_enchantments`, `enchant_randomly`, and `enchant_with_levels` loot functions
+
+### `minecraft:stored_enchantments` <Badge text="Replaces NBT feature" variant="note" />
+
+- Stores list of enchantments and their levels for an Enchanted Book
+- Unlike `minecraft:enchantments`, the effects provided by enchantments do not apply from this component
+- Replaces `StoredEnchantments` tag on Enchanted Books
+- Format: same as `minecraft:enchantments`
+  - `show_in_tooltip` value replaces 6th bit of `HideFlags` tag
+- On Enchanted Books, has an implicit default value of: `{levels:{}}`
+
+### `minecraft:custom_name` <Badge text="Replaces NBT feature" variant="note" />
+
+- Custom name override for an item (as set by renaming with an Anvil)
+- Replaces `display.Name` tag
+- Format: JSON chat component string
+  - e.g. `custom_name='{"text": "This item is renamed!", "color": "red"}'`
+- Can be modified with the `set_name` loot function
+
+### `minecraft:lore` <Badge text="Replaces NBT feature" variant="note" />
+
+- Additional lines to include in an item's tooltip
+- Replaces `display.Lore` tag
+- Format: list of JSON chat component strings (max: 256 entries)
+  - e.g. `lore=['{"text": "The cake is a lie!"}']`
+- If not set, has an implicit default value of: `[]`
+- Can be modified with the `set_lore` loot function
+
+### `minecraft:can_break` <Badge text="Replaces NBT feature" variant="note" />
+
+- Controls which blocks a player in Adventure mode can break with this item
+- Replaces `CanDestroy` tag
+  - These were previously stored as flat strings, but now use the more flexible block predicate format already used in loot tables and advancements
+- Format: object with fields
+  - `predicates`: list of block predicates
+    - `blocks`: block, list of blocks, or hash-prefixed block tag
+    - `nbt`: block entity NBT to match
+    - `state`: map of state property key to values to match
+  - `show_in_tooltip`: boolean (default: `true`)
+    - Replaces 4th bit of `HideFlags` tag
+  - e.g. `can_break={predicates:[{blocks:'minecraft:furnace',state:{facing:'north'}]}`
+  - Alternatively, can be defined as a single block predicate
+    - e.g. `can_break={blocks:'minecraft:stone'}`
+
+### `minecraft:can_place_on` <Badge text="Replaces NBT feature" variant="note" />
+
+- Controls which blocks a player in Adventure mode can place on with this item
+- Replaces `CanPlaceOn` tag
+- Format: object with fields
+  - `predicates`: list of block predicates
+    - Same as `can_break.predicates`
+  - `show_in_tooltip`: boolean (default: `true`)
+    - Replaces 5th bit of `HideFlags` tag
+  - e.g. `can_place_on={predicates:[{blocks:'minecraft:furnace',state:{facing:'north'}]}`
+  - Alternatively, can be defined as a single block predicate
+    - e.g. `can_place_on={blocks:'minecraft:stone'}`
+
+### `minecraft:dyed_color` <Badge text="Replaces NBT feature" variant="note" />
+
+- Represents a color applied to a dyeable item (in the `#minecraft:dyeable` item tag)
+- Replaces `display.color` tag
+- Format: object with fields
+  - `rgb`: integer, RGB value
+  - `show_in_tooltip`: boolean (default: `true`)
+    - Replaces 7th bit of `HideFlags` tag
+  - e.g. `dyed_color={rgb:16711680}`
+  - Alternatively, can be defined as an inline integer RGB value
+    - e.g. `dyed_color=16711680`
+
+### `minecraft:attribute_modifiers` <Badge text="Replaces NBT feature" variant="note" />
+
+- Holds attribute modifiers applied to any item
+- Replaces `AttributeModifiers` tag
+- Format: object with fields (default: `{modifiers:[]}`)
+  - `modifiers`: list of attribute modifiers
+    - `type`: attribute id
+      - Replaces `AttributeName`
+    - `slot`: one of:
+      - `any` (default)
+      - `hand`: either in main or offhand (new)
+      - `armor`: any armor slot (new)
+      - `mainhand`
+      - `offhand`
+      - `head`
+      - `chest`
+      - `legs`
+      - `feet`
+      - `body` (new)
+      - Modifiers will only apply when the item is equipped in the specified slot
+      - Replaces `Slot`
+    - `id`: This is a unique identifier per attribute for the modifier
+    - `amount`: double, number of units to modify this attribute (controlled by `operation`)
+      - Replaces `Amount`
+    - `operation`: one of:
+      - `add_value` (was `0`): Adds `amount` to the attribute
+      - `add_multiplied_base` (was `1`): Adds `amount` \* base value to the attribute
+      - `add_multiplied_total` (was `2`): Adds `amount` \* total value (from all previous modifiers) to the attribute
+      - Replaces `Operation` with integer ids
+  - `show_in_tooltip`: boolean (default: `true`)
+    - Replaces 2nd bit of `HideFlags` tag
+  - e.g. `attribute_modifiers={modifiers:[{type:'minecraft:generic.scale',uuid:[1,2,3,4],name:'Big!',amount:1.0,operation:'add_multiplied_base'}]}`
+  - Alternatively, can be defined as a direct list of modifiers
+    - e.g. `attribute_modifiers=[{type:'generic.scale',uuid:[1,2,3,4],name:'Big!',amount:1.0,operation:'add_multiplied_base'}]`
+- If not set, has an implicit default value based on the item type's default attributes (e.g. attack damage for weapons)
+- Can be modified with the `set_attributes` loot function
+
+### `minecraft:charged_projectiles` <Badge text="Replaces NBT feature" variant="note" />
+
+- Holds all projectiles that have been loaded into a Crossbow
+- If not present, the Crossbow is not charged
+- Replaces `Charged` and `ChargedProjectiles` tags
+- Format: list of item stacks
+  - Cannot store empty/air items
+  - e.g. `charged_projectiles=[{id:'minecraft:arrow'}]`
+  - No longer restricted to 3 entries
+- Can be modified with the `modify_contents` and `set_contents` loot functions
+
+### `minecraft:intangible_projectile` <Badge text="Replaces NBT feature" variant="note" />
+
+- Marks that a projectile item would be intangible when fired (i.e. can only be picked up by a creative mode player)
+- Only set when items are inside a Crossbow's [`charged_projectiles` component](#minecraftcharged_projectiles)
+- Format: empty object
+  - e.g. `intangible_projectile={}`
+
+### `minecraft:bundle_contents` <Badge text="Replaces NBT feature" variant="note" />
+
+- Holds all items stored inside of a Bundle
+- If removed, items cannot be added to the Bundle
+- Replaces `Items` tag
+- Format: list of item stacks
+  - Cannot store empty/air items
+  - e.g. `bundle_contents=[{id:'minecraft:poisonous_potato'}]`
+- On Bundles, has an implicit default value of: `[]`
+- Can be modified with the `modify_contents` and `set_contents` loot functions
+
+### `minecraft:map_color` <Badge text="Replaces NBT feature" variant="note" />
+
+- Represents the tint of the decorations on the Filled Map item
+- Replaces `display.MapColor` tag
+- Format: integer, RGB value
+  - e.g. `map_color=16711680`
+- On Filled Maps, has an implicit default value of: `4603950`
+
+### `minecraft:map_decorations` <Badge text="Replaces NBT feature" variant="note" />
+
+- Holds a list of markers to be placed on a Filled Map (used for Explorer Maps)
+- Replaces `Decorations` tag
+- Format: map of unique decoration id to decorations
+  - `type`: one of:
+    - `player` (was `0`)
+    - `frame` (was `1`)
+    - `red_marker` (was `2`)
+    - `blue_marker` (was `3`)
+    - `target_x` (was `4`)
+    - `target_point` (was `5`)
+    - `player_off_map` (was `6`)
+    - `player_off_limits` (was `7`)
+    - `mansion` (was `8`)
+    - `monument` (was `9`)
+    - `banner_white` (was `10`)
+    - `banner_orange` (was `11`)
+    - `banner_magenta` (was `12`)
+    - `banner_light_blue` (was `13`)
+    - `banner_yellow` (was `14`)
+    - `banner_lime` (was `15`)
+    - `banner_pink` (was `16`)
+    - `banner_gray` (was `17`)
+    - `banner_light_gray` (was `18`)
+    - `banner_cyan` (was `19`)
+    - `banner_purple` (was `20`)
+    - `banner_blue` (was `21`)
+    - `banner_brown` (was `22`)
+    - `banner_green` (was `23`)
+    - `banner_red` (was `24`)
+    - `banner_black` (was `25`)
+    - `red_x` (was `26`)
+    - `village_desert` (was `27`)
+    - `village_plains` (was `28`)
+    - `village_savanna` (was `29`)
+    - `village_snowy` (was `30`)
+    - `village_taiga` (was `31`)
+    - `jungle_temple` (was `32`)
+    - `swamp_hut` (was `33`)
+    - `trial_chambers` (new)
+    - Replaces `type` byte with numeric ids
+  - `x`: double, world coordinate
+  - `z`: double, world coordinate
+  - `rotation`: float, clockwise rotation from north in degrees
+    - Replaces `rot` double
+  - e.g. `map_decorations={'Some marker':{type:'target_x',x:123.0,z:-45.0,rotation:0.0f}}`
+- On Filled Maps, has an implicit default value of: `{}`
+
+### `minecraft:map_id` <Badge text="Replaces NBT feature" variant="note" />
+
+- References the shared map state holding map contents and markers for a Filled Map
+- Replaces `map` tag
+- Format: integer id
+  - e.g. `map_id=1`
+
+### `minecraft:custom_model_data` <Badge text="Replaces NBT feature" variant="note" />
+
+- Can be used to replace the models of items by selecting for the `minecraft:custom_model_data` property in the item model
+- Replaces `CustomModelData` tag
+- Format: integer value
+  - e.g. `custom_model_data=43`
+- Can be modified with the `set_custom_model_data` loot function
+
+### `minecraft:potion_contents` <Badge text="Replaces NBT feature" variant="note" /> <Badge text="Changed in 1.21.2" variant="caution" />
+
+- Holds the contents of a potion (Potion, Splash Potion, Lingering Potion), or potion applied to an item (Tipped Arrow)
+- Replaces `Potion`, `CustomPotionColor`, and `custom_potion_effects` tags
+- Format: object with fields
+  - `potion`: potion id (optional)
+    - The potion type in this item: the item will inherit all effects from this
+  - `custom_color`: integer, RGB value (optional)
+    - Overrides the visual color of the potion
+  - `custom_effects`: list of effect instances (default: `[]`)
+    - Additional list of custom effects that this item should apply, that may not be representable by an existing potion
+  - `custom_name`: string (optional)
+    - When present, used to generate containing stack name
+    - E.g. if the value is `foo` and the item is `minecraft:lingering_potion`, the name of item will be translation of `item.minecraft.lingering_potion.effect.foo`
+  - e.g. `potion_contents={potion:'minecraft:invisibility',custom_color:16711680}`
+  - Alternatively, can be defined as a single potion ID
+    - e.g. `potion_contents="invisibility"`
+- On Potion or Tipped Arrow items, has an implicit default value of: `{}`
+- Can be modified with the `set_potion` loot function
+
+### `minecraft:writable_book_content` <Badge text="Replaces NBT feature" variant="note" />
+
+- Holds the contents in a Book and Quill
+- Replaces `pages` and `filtered_pages` tags
+  - The pages list objects directly, with `{raw:'...'}` wrapping
+  - `filtered_pages` are pulled by index keys into the relevant page entry under the `filtered` field
+- Format: object with fields
+  - `pages`: list (max: 100 entries) of either:
+    - object with fields
+      - `raw`: string, page plain text contents
+      - `filtered`: string, filtered page contents (optional)
+        - If specified, players with chat filter enabled will see this page instead of `raw`
+    - or: string, page plain text contents
+  - e.g. `writable_book_content={pages:['Hello world!']}` or `writable_book_content={pages:[{raw:'Hello world!'}]}`
+- On Book and Quill, has an implicit default value of: `{pages:[]}`
+- Can be modified with the `set_writable_book_pages` loot function
+
+### `minecraft:written_book_content` <Badge text="Replaces NBT feature" variant="note" />
+
+- Holds the contents and metadata of a Written Book
+- Replaces `pages`, `filtered_pages`, `title`, `filtered_title`, `author`, `generation`, and `resolved` tags
+- Format: object with fields
+  - `pages`: list of filtered chat components
+    - Same format as `writable_book_contents` pages, except uses JSON chat component strings which can be formatted
+  - `title`: filtered string (same format as pages)
+  - `author`: string, player name
+  - `generation`: integer [0; 3]
+    - The number of times this book has been copied (`0` = original)
+  - `resolved`: boolean
+    - `true` if the chat components in this book have already been resolved (entity selectors, scores substituted)
+    - If `false`, it will be resolved when opened by a player
+  - e.g. `written_book_content={pages:['"Hello world!"'],title:{raw:'"A delightful read"'},author:'Herobrine',generation:1,resolved:true}`
+- Can be modified with the `set_written_book_pages` and `set_book_cover` loot functions
+
+### `minecraft:trim` <Badge text="Replaces NBT feature" variant="note" />
+
+- Holds the trims applied to an item
+  - Presence of the component is no longer restricted by the `#minecraft:trimmable_armor` item tag (although, this tag is still used for recipes)
+- Replaces `Trim` tag of the same format
+- Format: object with fields
+  - `pattern`: pattern id (or inline pattern)
+  - `material`: material id (or inline material)
+  - `show_in_tooltip`: boolean (default: `true`)
+    - Replaces 8th bit of `HideFlags` tag
+  - e.g. `trim={pattern:'minecraft:silence',material:'minecraft:redstone'}`
+
+### `minecraft:suspicious_stew` <Badge text="Replaces NBT feature" variant="note" />
+
+- Holds the effects that will be applied when consuming Suspicious Stew
+- Replaces `effects` tag of the same format
+- Format: list of effect objects with fields
+  - `id`: effect id
+  - `duration`: integer, tick count (default: `160`)
+  - e.g. `suspicious_stew=[{id:'minecraft:poison'}]`
+- On Suspicious Stew, has an implicit default value of: `[]`
+- Can be modified with the `set_stew_effect` loot function
+
+### `minecraft:hide_additional_tooltip` <Badge text="Replaces NBT feature" variant="note" />
+
+- If present, disables 'additional' tooltip part which comes from the item type
+- Replaces 6th bit of `HideFlags` tag
+- Format: empty object
+  - e.g. `hide_additional_tooltip={}`
+
+### `minecraft:debug_stick_state` <Badge text="Replaces NBT feature" variant="note" />
+
+- Stores the selected block state properties used by a Debug Stick
+- Replaces `DebugProperty` tag
+- Format: map of block id to block property name
+  - e.g. `debug_stick_state={'minecraft:turtle_egg':'eggs','minecraft:furnace':'facing'}`
+- On Debug Stick, has an implicit default value of: `{}`
+
+### `minecraft:entity_data` <Badge text="Replaces NBT feature" variant="note" />
+
+- Stores unstructured NBT data to apply to an entity when using an item that spawns an entity, such as a Spawn Egg or Armor Stand
+- Replaces previous `EntityTag` tag, with same behavior
+- Format: object with fields
+  - Must contain an `id` field with the entity type
+  - Any additional fields will be merged into the entity when spawned
+  - e.g. `entity_data={id:'minecraft:pig',Health:1.0f}`
+
+### `minecraft:bucket_entity_data` <Badge text="Replaces NBT feature" variant="note" />
+
+- Stores unstructured NBT data to apply to an entity when placed from a bucket
+- Replaces `NoAI`, `Silent`, `NoGravity`, `Glowing`, `Invulnerable`, `Health`, `Age`, `Variant`, `HuntingCooldown`, and `BucketVariantTag` tags
+- Format: object with fields
+  - Can contain any of the above listed fields, which will be applied to the entity when placed
+  - e.g. `bucket_entity_data={NoAI:1,Age:43}`
+- On bucketed mob items, has an implicit default value of: `{}`
+
+### `minecraft:instrument` <Badge text="Replaces NBT feature" variant="note" />
+
+- Holds the instrument type used by a Goat Horn
+- Replaces `instrument` tag of same format
+- Format: instrument id
+  - e.g. `instrument='minecraft:ponder_goat_horn'`
+- Can be modified with the `set_instrument` loot function
+
+### `minecraft:recipes` <Badge text="Replaces NBT feature" variant="note" />
+
+- List of recipes that should be unlocked when using the Knowledge Book item
+- Replaces `Recipes` tag of same format
+- Format: list of recipe ids
+  - e.g. `recipes=['minecraft:acacia_boat','minecraft:anvil']`
+- On Knowledge Book, has an implicit default value of: `[]`
+
+### `minecraft:lodestone_tracker` <Badge text="Replaces NBT feature" variant="note" />
+
+- If present, specifies that the Compass is a Lodestone Compass
+- Replaces `LodestonePos`, `LodestoneDimension`, and `LodestoneTracked` tags
+- Format: object with fields
+  - `target`: object with fields (optional)
+    - `pos`: integer array of x, y, and z
+    - `dimension`: dimension id
+    - If not present, the compass will spin
+  - `tracked`: boolean (default: `true`)
+    - If `true`, when the Lodestone at the target position is removed, the `target` field will be removed
+  - e.g. `lodestone_tracker={target:{pos:[13,64,-43],dimension:'minecraft:the_nether'}}`
+
+### `minecraft:firework_explosion` <Badge text="Replaces NBT feature" variant="note" />
+
+- Stores the explosion crafted in a Firework Star
+- Replaces `Explosion.Type`, `Explosion.Colors`, `Explosion.FadeColors`, `Explosion.Trail`, and `Explosion.Flicker` tags
+- Format: object with fields
+  - `shape`: one of
+    - `small_ball` (was `0`)
+    - `large_ball` (was `1`)
+    - `star` (was `2`)
+    - `creeper` (was `3`)
+    - `burst` (was `4`)
+    - Replaces `Type` numeric ids
+  - `colors`: integer array, RGB values (default: `[]`)
+    - List of initial particle colors, randomly selected from
+  - `fade_colors`: integer array, RGB values (default: `[]`)
+    - List of particle colors to fade to, randomly selected from
+  - `has_trail`: boolean (default: `false`)
+  - `has_twinkle`: boolean (default: `false`)
+    - Renamed from `Flicker` tag
+  - e.g. `firework_explosion={shape:'large_ball',colors:[16711680],has_trail:true}`
+- Can be modified with the `set_firework_explosion` loot function
+
+### `minecraft:fireworks` <Badge text="Replaces NBT feature" variant="note" />
+
+- Stores all explosions crafted into a Firework Rocket, as well as flight duration
+- Replaces `Fireworks.Explosions` and `Fireworks.Flight` tags
+- Format: object with fields
+  - `explosions`: list of explosions (max: 256 entries)
+    - Same format as [`minecraft:firework_explosion` component](#minecraftfirework_explosion)
+  - `flight_duration`: unsigned byte, number of gunpowder in this rocket
+  - e.g. `fireworks={explosions:[{shape:'large_ball',colors:[16711680],has_trail:true}],flight_duration:2}`
+- On Firework Rocket, has an implicit default value of: `{explosions:[],flight_duration:1}`
+- Can be modified with the `set_fireworks` loot function
+
+### `minecraft:profile` <Badge text="Replaces NBT feature" variant="note" />
+
+- Controls the skin displayed on a Player Head
+- Copied to Player Head block when placed
+- Replaces `SkullOwner` tag
+- If only a `name` is specified, it will be resolved into the corresponding player ID and skin data
+- Unlike `SkullOwner` which only supported resolution by name, if only `id` is specified, the profile and skin will be resolved from this UUID
+- Format: object with fields
+  - `name`: string, player profile name (optional)
+    - Must be a valid player name (max 16 characters, no spaces, or special characters)
+    - As this could exist in previous data formats, but would not resolve to a skin, this is replaced by the [`item_name` component](#minecraftitem_name) which is persisted when placed and broken
+  - `id`: uuid, player profile id (optional)
+  - `properties`: list of properties (optional)
+    - `name`: string, property name (e.g. `textures`)
+    - `value`: string (base64 encoded texture data)
+    - `signature`: string (optional)
+  - e.g. `profile={name:'MHF_Sheep'}`
+  - Alternatively, can be defined as a simple player profile name string
+    - e.g. `profile='MHF_Sheep'`
+- Can be modified with the `fill_player_head` loot function
+
+### `minecraft:note_block_sound` <Badge text="Replaces NBT feature" variant="note" />
+
+- Controls the sound played by a Player Head when placed on a Note Block
+- Copied to Player Head block when placed
+- Replaces `BlockEntityTag.note_block_sound` tag
+- Format: sound event id
+  - e.g. `note_block_sound='minecraft:ambient.cave'`
+
+### `minecraft:base_color` <Badge text="Replaces NBT feature" variant="note" />
+
+- Stores the base color for a Shield
+- Replaces `BlockEntityTag.Base` tag
+- Format: one of
+  - `white` (was `0`)
+  - `orange` (was `1`)
+  - `magenta` (was `2`)
+  - `light_blue` (was `3`)
+  - `yellow` (was `4`)
+  - `lime` (was `5`)
+  - `pink` (was `6`)
+  - `gray` (was `7`)
+  - `light_gray` (was `8`)
+  - `cyan` (was `9`)
+  - `purple` (was `10`)
+  - `blue` (was `11`)
+  - `brown` (was `12`)
+  - `green` (was `13`)
+  - `red` (was `14`)
+  - `black` (was `15`)
+  - e.g. `base_color='magenta'`
+
+### `minecraft:banner_patterns` <Badge text="Replaces NBT feature" variant="note" />
+
+- Stores the additional patterns applied to a Banner or Shield
+- Copied to Banner block when placed
+- Replaces `BlockEntityTag.Patterns` tag
+- Format: list of banner patterns
+  - `pattern`: banner pattern registry id
+    - Replaces short banner pattern code in `Patterns[].Pattern`
+  - `color`: dye color name
+    - Replaces integer dye color id in `Patterns[].Color`
+  - e.g. `banner_patterns=[{pattern:'minecraft:stripe_top',color:'red'}]`
+- On Banners and Shields, has an implicit default value of: `[]`
+- Can be modified with the `set_banner_pattern` loot function
+
+### `minecraft:pot_decorations` <Badge text="Replaces NBT feature" variant="note" />
+
+- Stores the Sherds applied to each side of a Decorated Pot
+- Copied to Decorated Pot block when placed
+- Replaces `BlockEntityTag.sherds` tag of same format
+- Format: list of sherd item ids
+  - e.g.  
+    `['arms_up_pottery_sherd','angler_pottery_sherd','danger_pottery_sherd','shelter_pottery_sherd']`
+- On Decorated Pots, has an implicit default value of: `['minecraft:brick','minecraft:brick','minecraft:brick','minecraft:brick']`
+
+### `minecraft:container` <Badge text="Replaces NBT feature" variant="note" />
+
+- Holds the contents of container blocks (Chests, Shulker Boxes) in item form
+- Copied into container block when placed
+- Replaces `BlockEntityTag.Items` tag
+- Format: list of slots
+  - `slot`: integer [0; 255], representing a slot in the container
+  - `item`: item stack
+  - e.g. `container=[{slot:7,item:{id:'diamond_pickaxe',components:{'minecraft:unbreakable':{}}}}]`
+- On container blocks, has an implicit default value of: `[]`
+- Can be modified with the `modify_contents` and `set_contents` loot functions
+
+### `minecraft:bees` <Badge text="Replaces NBT feature" variant="note" />
+
+- Holds the bees inside a Beehive or Bee Nest
+- Copied to Beehive or Bee Nest block when placed
+- Replaces `BlockEntityTag.Bees` tag
+- Format: list of bees
+  - `entity_data`: map of string to string
+    - `id`: entity id
+    - The remainder tags merged into the Bee when spawned
+  - `ticks_in_hive`: integer
+  - `min_ticks_in_hive`: integer
+  - e.g: `bees=[{entity_data:{id='minecraft:bee'},ticks_in_hive:3,min_ticks_in_hive:10}]`
+- On Beehive and Bee Nest, has an implicit default value of: `[]`
+
+### `minecraft:lock` <Badge text="Replaces NBT feature" variant="note" />
+
+- Holds the lock state of a container-like block
+  - An item with a custom name of the same value must be used to open this container
+- Copied to container block when placed
+- Replaces `BlockEntityTag.Lock` tag
+- Format: string value, representing the key
+  - e.g: `lock='hunter2'`
+
+### `minecraft:container_loot` <Badge text="Replaces NBT feature" variant="note" />
+
+- Holds the unresolved loot table and seed of a container-like block
+- Copied to container block when placed
+- Replaces `BlockEntityTag.LootTable` and `BlockEntityTag.LootTableSeed` tags
+- Format: object with fields
+  - `loot_table`: loot table id
+  - `seed`: long, pseudorandom seed to resolve the loot table with (optional)
+    - If not specified, or `0`, the seed will be picked randomly when the loot table is evaluated
+  - e.g. `container_loot={loot_table:'minecraft:chests/buried_treasure',seed:123}`
+- Can be modified with the `set_loot_table` loot function
+
+### `minecraft:block_entity_data` <Badge text="Replaces NBT feature" variant="note" />
+
+- Stores unstructured NBT data to apply to a block entity when placing a block such as a Chest or Furnace
+- Replaces previous `BlockEntityTag` tag, with same behavior
+- Any block entity data moved into a dedicated item component is removed from this tag
+- For Command Blocks, Lecterns, Signs, and Spawners: this tag will not be copied unless the player is an operator
+- Format: object with fields
+  - Must contain an `id` field with the block entity type
+  - Any additional fields will be merged into the block entity when placed
+  - e.g. `block_entity_data={id:'minecraft:chest',Items:[{Slot:1,item:'minecraft:diamond'}]}`
+
+### `minecraft:block_state` <Badge text="Replaces NBT feature" variant="note" />
+
+- Holds block state properties to apply when placing a block
+- Replaces `BlockStateTag` tag
+- Format: map of property key to property value
+  - All property values, including integer and boolean types, must be represented as strings
+  - e.g: `block_state={eggs:'10'}`
+
+### `minecraft:enchantment_glint_override`
+
+- Overrides the enchantment glint effect on an item
+- Can be used in the same way that an invalid `Enchantments` tag would previously behave to add a glint
+- Format: boolean
+  - If `true`, an item without an enchantment glint will display a glint
+  - If `false`, an item with a glint will not display this glint (either from enchantments or intrinsic properties of the item)
+  - e.g: `enchantment_glint_override=true`
+
+### `minecraft:food` <Badge text="Changed in 1.21.2" variant="caution" />
+
+- A data container which only holds the food stats applied when the item is consumed
+- Does not enable the item to be eaten. That requires the [`consumable` component](#minecraftconsumable).
+- Format: object with fields
+  - `nutrition`: Non-negative integer, the amount of nutrition applied when consumed
+  - `saturation`: Float, the amount of saturation applied when consumed
+  - `can_always_eat`: Boolean (defaul `false`), whether it can be consumed even when the user is not hungry
+
+### `minecraft:max_stack_size`
+
+- Controls the maximum stacking size of this item
+- Values greater than 1 are mutually exclusive with the [`max_damage` component](#minecraftmax_damage)
+- Format: integer between 1 and 99
+  - e.g. `max_stack_size=4`
+- Has an implicit default value according to the item type (usually `64`)
+
+### `minecraft:max_damage`
+
+- Controls the maximum amount of damage than an item can take
+- Mutually exclusive with the [`max_stack_size` component](#minecraftmax_stack_size) greater than 1
+- Requires that the [`damage` component](#minecraftdamage) is also present on the item
+- If not present, the item cannot be damaged
+- Format: positive integer
+  - e.g. `max_damage=123`
+- Has an implicit default value for damageable items
+
+### `minecraft:tool`
+
+- Controls the behavior of the item as a tool
+- Format: object with fields
+  - `rules`: list of rule entries to apply in order
+    - `blocks`: single block, list of blocks, or `#`-prefixed block tag to match
+    - `speed` (optional): float, overrides the mining speed if present and matched
+    - `correct_for_drops` (optional): boolean, overrides whether this tool is considered 'correct' if present and matched
+      - `true` will cause the block to mine at its most efficient speed, and drop items if the targeted block requires that
+  - `default_mining_speed`: float, mining speed to use if no rules match and override mining speed (default: `1.0`)
+  - `damage_per_block`: non-negative int, amount of durability to remove each time a block is mined with this tool
+  - e.g. `tool={rules:[{blocks:"#mineable/pickaxe",speed:4.0,correct_for_drops:true}]}`
+- Vanilla tool items will have an implicit default value based on their tier and tool type
+
+### `minecraft:hide_tooltip`
+
+- If present, it will completely hide whole item tooltip (that includes item name)
+- Tooltip will still be visible and searchable in creative mode
+- Format: empty object
+
+### `minecraft:item_name` <Badge text="Changed in 1.21.2" variant="caution" />
+
+- Always present on every item
+- Name provided by this component always has the lowest priority
+  - That means it will be overriden by components such as [`minecraft:potion_contents`](#minecraftpotion_contents) or [`minecraft:written_book_content`](#minecraftwritten_book_content)
+- When present, replaces default item name with contained chat component
+- Differences from `custom_name`:
+  - `item_name` can't be changed or removed in Anvil
+  - `item_name` is not styled with italics when displayed to player
+  - `item_name` does not show labels where applicable (for example: banner markers, names in item frames)
+- Can be modified with the `set_name` loot function
+
+### `minecraft:damage_resistant` <Badge text="Changed in 1.21.2" variant="caution" />
+
+<Aside type="caution">
+	In 1.21.2 this component was renamed from `minecraft:fire_resistant` to
+	`minecraft:damage_resistant`
+</Aside>
+
+- Items with this component, when in entity form, will be resistant to the damage types included in the `types` tag
+- Format: object with fields
+  - `types`: hash-prefixed damage type tag
+- This component also affects whether the equipped item will be damaged when the wearer is hurt by a given damage type
+- Has an implicit default value for fire-resistant items such as Netherite
+
+### `minecraft:rarity`
+
+- Controls the color of the item name
+- Format: enumerated value, one of:
+  - `common` (default): white name, or aqua when enchanted
+  - `uncommon`: yellow name, or aqua when enchanted
+  - `rare`: aqua name, or light purple when enchanted
+  - `epic`: light purple name
+  - e.g. `rarity=rare`
+- Special items such as Golden Apples have an implicit default value
+
+### `minecraft:ominous_bottle_amplifier`
+
+- Controls the amplifier amount for an Ominous Bottle's Bad Omen effect
+- Format: integer between 0 and 4
+  - e.g. `ominous_bottle_amplifier=3`
+- Can be modified with the `set_ominous_bottle_amplifier` loot function
+
+### `minecraft:jukebox_playable` <Badge text="Since 1.21" variant="tip" />
+
+- If set, the item can be inserted into Jukeboxes to play a song
+- Format: object with fields
+  - `song`: Jukebox song id
+    - The song that will be played by the Jukebox when this item stack is inserted
+  - `show_in_tooltip`: boolean (default: true)
+    - If false, the name of the song will not be shown in the tooltip
+  - e.g. `jukebox_playable={song:'minecraft:precipice'}, jukebox_playable={song:'minecraft:precipice', show_in_tooltip:false}`
+
+### `minecraft:consumable` <Badge text="Since 1.21.2" variant="tip" />
+
+- If present, this item can be consumed on use
+  - If `food`, `potion_contents`, `ominous_bottle_amplifier` or `suspicious_stew_contents` are also present on this item, consuming this will apply the stats and effects of those components
+- Format: object with fields
+  - `consume_seconds`: Non-negative float (default `1.6`)
+    - The amount of seconds it takes for a player to consume the item.
+  - animation: The animation used during consumption of the item
+    - Default value: `eat`
+    - Accepted values:
+      - `none`
+      - `eat`
+      - `drink`
+      - `block`
+      - `bow`
+      - `spear`
+      - `crossbow`
+      - `spyglass`
+      - `toot_horn`
+      - `brush`
+  - `sound`: Sound event (default `entity.generic.eat`)
+    - The sound used during and on completion of the item's consumption
+  - `has_consume_particles`: Boolean (default `true`),
+    - Whether consumption particles are emitted while consuming this item
+  - `on_consume_effects`: An optional list of side effects which take place as a result of consuming this item
+    - There are currently 5 valid consume effects, identified by a `type` field
+    - `minecraft:apply_effects`
+      - `effects`: A list of status effect instances applied once consumed
+      - `probability`: Float (default `1.0`)
+        - The probability the above effects will be applied once consumed
+    - `minecraft:remove_effects`
+      - `effects`: A set of status effects removed once consumed, as either a Status Effect ID, hash-prefixed tag, or list of IDs
+    - `minecraft:clear_all_effects`
+      - Clears all status effects of the consumer
+    - `minecraft:teleport_randomly`
+      - `diameter`: Positive float (default `16.0`),
+        - The diameter that the consumer will be teleported within
+    - `minecraft:play_sound`
+      - `sound`: Sound event, played once consumed
+  - e.g. `consumable={consume_seconds:3.0, animation:'eat', sound:'entity.generic.eat', has_consume_particles:true, on_consume_effects:[{type:'minecraft:clear_all_effects'}]}`
+
+### `minecraft:use_remainder` <Badge text="Since 1.21.2" variant="tip" />
+
+- If present, will replace the item with a remainder if its stack count has decreased after use
+  - If the item has a stack count higher than 0 after use, the remainder item will be added to the inventory
+  - If the inventory is full when trying to add a remainder item to it, it will be dropped on the ground
+- Format: single value as an item stack
+  - e.g. `use_remainder={id:'minecraft:stick',count:1}`
+
+### `minecraft:use_cooldown` <Badge text="Since 1.21.2" variant="tip" />
+
+- If present, this item will apply a cooldown to all items of the same type or "cooldown group" once used
+- Format: object with fields
+  - `seconds`: Positive float, the amount of seconds the cooldown will take place for
+  - `cooldown_group`: Optional namespaced id representing the cooldown group
+    - Items with the same cooldown group will share any cooldown applied to another item within that group
+    - If not specified, the cooldown group defaults to the base item type's ID
+  - e.g. `use_cooldown={seconds:1.5,cooldown_group:"minecraft:custom_weapon"}`
+
+### `minecraft:item_model` <Badge text="Since 1.21.2" variant="tip" />
+
+- Controls item model
+- Present on every item
+- Format: namespaced ID
+  - `namespace:id` will reference model `/assets/<namespace>/models/item/<id>`
+
+### `minecraft:equippable` <Badge text="Since 1.21.2" variant="tip" />
+
+- If present, this item can be equipped by players in the selected slot
+- Format: object with fields
+  - `slot`: one of `head`, `chest`, `legs`, `feet`, `body`, `mainhand`, or `offhand`
+  - `equip_sound` (optional): Sound event to play when the item is equipped
+    - If not specified, the default armor equip sound will be played
+  - `model` (optional): namespaced ID of the equipment model to use when equipped
+    - These model definitions are loaded from Resource Packs
+    - If not specified, will fall back to rendering as the item itself when in the head slot (or no rendering if not applicable)
+  - `camera_overlay` (optional): namespaced ID of the overlay texture to use when equipped
+    - If not specified, no overlay is used
+    - The ID will address a texture under the `textures/` folder and automatically assumed to be `.png`
+      - For instance, `misc/pumpkinblur` addresses `textures/misc/pumpkinblur.png`
+  - `allowed_entities` (optional): Entity ID, Entity Tag, or list of Entity IDs to limit which entities can equip this item
+    - If not specified, any entity (that can wear this kind of equipment) is allowed to equip this item
+  - `dispensable`: boolean (default: `true`), whether the item can be equipped by using a Dispenser
+    - If the item type has special dispenser behavior, this will have no effect
+  - `swappable`: boolean (default: `true`), whether the item can be equipped into the relevant slot by right-clicking
+  - `damage_on_hurt`: boolean (default: `true`), whether this item will be damaged when the wearing entity is damaged
+  - e.g. `equippable={slot:'chest',equip_sound:'item.armor.equip_chain'}`
+
+### `minecraft:glider` <Badge text="Since 1.21.2" variant="tip" />
+
+- If present, this item will allow players to glide (as with Elytra) when equipped
+- Format: empty object
+  - e.g. glider={}
+
+### `minecraft:tooltip_style` <Badge text="Since 1.21.2" variant="tip" />
+
+- If present, this item can use custom sprites for its tooltip background and frame
+- Format: namespaced ID for a tooltip style
+  - A tooltip style of `namespace:path` will use sprites with IDs:
+    - `<namespace>:tooltip/<path>_background` and `<namespace>:tooltip/<path>_frame`
+  - e.g. `tooltip_style='minecraft:special_sword'`
+
+### `minecraft:death_protection` <Badge text="Since 1.21.2" variant="tip" />
+
+- If present, this item will protect the holder from dying by restoring a single health point
+- Format: object with fields
+  - `death_effects`: An optional list of effects that are applied when the item protects the holder
+    - These effects are the same as those specified by the `on_consume_effects` field in the [`consumable` component](#minecraftconsumable)
+
+### `minecraft:repairable` <Badge text="Since 1.21.2" variant="tip" />
+
+- If present, and this item is damageable, this item can be repaired in an Anvil using the specified ingredient
+- Format: object with fields
+  - `items`: Item, list of Items, or hash-prefixed Item Tag matching what can be used to repair this item
+  - e.g. `repairable={items:'stick'}`
+
+### `minecraft:enchantable` <Badge text="Since 1.21.2" variant="tip" />
+
+- If present (and any enchantments are applicable), this item can be enchanted in an Enchanting Table
+- Format: object with fields
+  - `value`: Positive integer, a higher value allows enchantments with a higher cost to be picked
+  - e.g. `enchantable={value:15}`
