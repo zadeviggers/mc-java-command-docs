@@ -6,9 +6,12 @@ import starlight from "@astrojs/starlight";
 export default defineConfig({
 	integrations: [
 		starlight({
-			title: "MC Java Command Docs",
+			title: "MC:JE Technical Docs",
 			social: {
 				github: "https://github.com/zadeviggers/mc-java-command-docs",
+			},
+			components: {
+				SiteTitle: "./src/components/SiteTitle.astro",
 			},
 			sidebar: [
 				{
