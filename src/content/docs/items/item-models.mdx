@@ -252,6 +252,70 @@ These are used by the [`minecraft:select`](#minecraftselect) item model type.
 
 These are used by the [`minecraft:range_dispatch`](#minecraftrange_dispatch) item model type.
 
+### `minecraft:custom_model_data` (numeric property)
+
+- Returns value from floats list in the [`minecraft:custom_model_data` component](../item-components/#minecraftcustom_model_data)
+- Fields:
+  - `index` - index for field in floats, default: `0`
+
+### `minecraft:bundle/fullness`
+
+- Returns weight of the [`minecraft:bundle_contents` component](../item-components/#minecraftbundle_contents) or `0` if not present
+
+### `minecraft:damage`
+
+- Returns value for damage component
+- Fields:
+  - `normalize`: boolean, default: `true`
+    - if `true`, returns value of damage divided by the [`minecraft:max_damage` component](../item-components/#minecraftmax_damage), clamped to `0..1`
+    - if `false`, returns value of damage, clamped to `0..max_damage`
+
+### `minecraft:count`
+
+- Returns stack size
+- Fields:
+  - `normalize`: boolean, default: `true`
+    - if `true`, returns count divided by the [`minecraft:max_stack_size` component](../item-components/#minecraftmax_stack_size), clamped to `0..1`
+    - if `false`, returns count clamped to `0..max_stack_size`
+
+### `minecraft:cooldown`
+
+- Returns remaining cooldown for item, scaled to `0..1`
+
+### `minecraft:time`
+
+- Returns value of day time (used for clock), scaled to `0..1`
+- Fields:
+  - `wobble`: if `true`, value will oscillate for some time around target before settling, default: `true`
+  - `natural_only`: if `true`, value will be random in dimensions with `natural=false`, default: `true`
+
+### `minecraft:compass`
+
+- Returns angle, scaled to `0..1` in `x-z` plane between holder position and target
+- If target is not valid (not present, in other dimension or to close to holder position) random value will be returned
+- Fields:
+  - `target`: one of:
+    `spawn`: points at world spawn
+    `lodestone`: points at location stored in [`minecraft:lodestone_tracker` component](../item-components/#minecraftlodestone_tracker)
+    `recovery`: points at last player death location
+    `wobble`: if true, value will oscillate for some time around target before settling, default: `true`
+
+### `minecraft:crossbow/pull`
+
+- Returns crossbow-specific use time
+
+### `minecraft:use_duration`
+
+- Returns item use ticks
+- Fields:
+  - `remaining`: if `true`, returned value will be remaining use ticks, if `false` - ticks so far, default: `false`
+
+### `minecraft:use_cycle`
+
+- Returns remaining use ticks modulo period
+- Fields:
+  - `period`: positive float, default `1.0`
+
 ## Special model types
 
 These are used by the [`minecraft:special`](#minecraftspecial) item model type.
