@@ -140,7 +140,7 @@ These are used by the [`minecraft:model`](#minecraftmodel) item model type.
   -Fields:
   `default`: RGB value
 
-### `minecraft:custom_model_data`
+### `minecraft:custom_model_data` (tint source)
 
 - Returns value from colors list in [`minecraft:custom_model_data` component](../item-components/#minecraftcustom_model_data-)
 - Fields:
@@ -149,6 +149,104 @@ These are used by the [`minecraft:model`](#minecraftmodel) item model type.
 ## Boolean properties
 
 These are used by the [`minecraft:condition`](#minecraftcondition) item model type.
+
+### `minecraft:using_item`
+
+- Returns true if player is currently using this item
+
+### `minecraft:broken`
+
+- Returns true if the item is damageable and has only one use remaining before breaking
+
+### `minecraft:damaged`
+
+- Returns true if the item is damageable and has been used at least once
+
+### `minecraft:has_component`
+
+- Returns true if the given component is present on the item
+- Fields:
+  - `component` - [component type](../item-components/#component-types)
+
+### `minecraft:fishing_rod/cast`
+
+- Returns true if there is a fishing bobber attached to currently used fishing rod
+
+### `minecraft:bundle/has_selected_item`
+
+- Returns true if bundle is "open", i.e. it has selected item visible in GUI
+
+### `minecraft:xmas`
+
+- Returns true if current date is between December 24th and December 26th (inclusive)
+
+### `minecraft:selected`
+
+- Returns true if item is selected on a hotbar
+
+### `minecraft:carried`
+
+- Returns true if item is carried between slots in GUI
+
+### `minecraft:shift_down`
+
+- Returns true if player currently holding shift key down
+
+### `minecraft:custom_model_data` (boolean property)
+
+- Returns value from `flags` list in the [`minecraft:custom_model_data` component](../item-components/#minecraftcustom_model_data)
+- Fields:
+  - `index`: index for field in `flags`, default: `0`
+
+## Discrete properties
+
+These are used by the [`minecraft:select`](#minecraftselect) item model type.
+
+### `minecraft:main_hand`
+
+- Returns main hand of holding player
+- Values: `left`, `right`
+
+### `minecraft:charge_type`
+
+- Returns charge type stored in the [`minecraft:charged_projectiles` component](../item-components/#minecraftcharged_projectiles)
+- Values:
+  - `none`: if there are no projectiles or component is not present
+  - `rocket`: if there is at least one firework rocket
+  - `arrow`: any other case
+
+### `minecraft:trim_material`
+
+- Returns value of material field from the [`minecraft:trim` component](../item-components/#minecrafttrim), if present
+- Values: namespaced ID
+
+### `minecraft:block_state`
+
+- Returns value for some property from the [`minecraft:block_state` component](../item-components/#minecraftblock_state)
+- Fields:
+  - `block_state_property`: string key to select from component
+- Values: any string
+
+### `minecraft:display_context`
+
+- Returns context this item is rendered in
+- Values:
+  - `none`
+  - `thirdperson_lefthand`
+  - `thirdperson_righthand`
+  - `firstperson_lefthand`
+  - `firstperson_righthand`
+  - `head`
+  - `gui`
+  - `ground`
+  - `fixed`
+
+### `minecraft:custom_model_data` (discrete property)
+
+- Returns value from strings list in the [`minecraft:custom_model_data` component](../item-components/#minecraftcustom_model_data)
+- Fields:
+  - `index` - index for field in strings, default: `0`
+- Values: any string
 
 ## Numerical properties
 
