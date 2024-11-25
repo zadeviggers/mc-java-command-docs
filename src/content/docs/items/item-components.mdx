@@ -10,7 +10,7 @@ import { Badge, Aside } from "@astrojs/starlight/components";
 Item stack components is a system for customising all aspects
 of an item. It replaces the old NBT system for item customisation.
 
-Content on this page is largely pulled from the offical minecraft patch notes, with light editing and formatting.
+Content on this page is largely pulled from the official Minecraft patch notes, with light editing and formatting.
 
 - Item types (e.g. `minecraft:stick`) hold a set of default components on an item that individual item stacks can override
 - When advanced tooltips are enabled (F3+H), the number of components will be displayed instead of number of tags
@@ -314,10 +314,10 @@ Most components add new functionality, but some replicate functionality that was
 - Can be used to replace the models of items by selecting for the `minecraft:custom_model_data` property in the item model
 - Replaces `CustomModelData` tag
 - Format: object with fields
-  - `floats` - list of floats.
-  - `flags` - list of booleans.
-  - `strings` - list of strings.
-  - `colors` - list of RGB color values
+  - `floats`: list of floats.
+  - `flags`: list of booleans.
+  - `strings`: list of strings.
+  - `colors`: list of RGB color values
   - These lists of values are accessed by the various model property getters
 - Can be modified with the `set_custom_model_data` loot function
 
@@ -806,12 +806,13 @@ Most components add new functionality, but some replicate functionality that was
     - If not specified, the cooldown group defaults to the base item type's ID
   - e.g. `use_cooldown={seconds:1.5,cooldown_group:"minecraft:custom_weapon"}`
 
-### `minecraft:item_model` <Badge text="Since 1.21.2" variant="tip" />
+### `minecraft:item_model` <Badge text="Since 1.21.2" variant="tip" /> <Badge text="Changed in 1.21.4" variant="caution" />
 
-- Controls item model
+- Controls [item model](../item-models)
 - Present on every item
 - Format: namespaced ID
-  - `namespace:id` will reference model `/assets/<namespace>/models/item/<id>`
+  - `namespace:id` will reference model `/assets/<namespace>/items/<id>`
+  - e.g. model for item with `item_model=foo:bar` is stored in `/assets/foo/items/bar.json`
 
 ### `minecraft:equippable` <Badge text="Since 1.21.2" variant="tip" /> <Badge text="Changed in 1.21.4" variant="caution" />
 

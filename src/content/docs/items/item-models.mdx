@@ -1,0 +1,159 @@
+---
+title: Item Models
+description: The way to describing how an item should be rendered
+---
+
+import { Badge, Aside } from "@astrojs/starlight/components";
+
+<Badge text="Since 1.21.4" variant="tip" size="large" />
+
+Custom item models allow developers to specify what model/texture to use when rendering items in Minecraft.
+The concept of custom models has exited in-game for a long time, but was overhauled in 1.21.4.
+
+Content on this page is largely pulled from the official Minecraft patch notes, with light editing and formatting.
+
+## Model syntax
+
+Item models are selected based on the [`minecraft:item_model` component](../item-components/#minecraftitem_model-).
+
+- The model for item with `item_model=foo:bar` is stored in `/assets/foo/items/bar.json`
+
+```json
+{ "model": {"type": <item model type>, <item model type specific fields> } }
+```
+
+## Item model types
+
+### `minecraft:model`
+
+- Renders a plain model from `models` directory
+- Fields:
+  - `model`: namespaced ID of model in `models` (e.g. `minecraft:block/yellow_glazed_terracotta`)
+  - `tints`: a list of tint sources to apply to elements of rendered model (first entry applies to `tintindex` `0`, second one `-1`, etc.)
+    - Format:
+      - `type`: type of [tint source](#tint-source-types)
+      - `<type-specific>`: additional fields depending on tint source type
+
+### `minecraft:special`
+
+- Renders a special (not data-driven) model
+  -Fields:
+  - `model`: special model instance
+    - Format:
+      - `type`: [type of special model](#special-model-types)
+      - `<type-specific>`: additional fields depending on special model type
+  - `base`: namespaced ID of model in `models`, providing transformations, particle texture and GUI light
+
+### `minecraft:composite`
+
+- Renders multiple sub-models
+- All models are rendered in the same space
+- Fields:
+  - `models`: a list of item models to render
+
+### `minecraft:condition`
+
+- Renders an item model depending on a boolean property
+- Fields:
+  - `property`: type of [boolean property](#boolean-properties)
+  - `<property-specific>`: additional fields depending on property type, added inline
+  - `on_true`: item model to render when property is true
+  - `on_false`: item model to render when property is false
+
+### `minecraft:select`
+
+- Renders an item model based on one or more discrete properties
+- Fields:
+  - `property`: type of [discrete property]](#discrete-properties)
+  - `<property-specific>`: additional fields depending on property type, added inline
+  - `cases`: list of cases to match in format:
+    - `when`: value to match against property, type depends on property
+      - could be a single value or a list of values
+    - `model`: item model to render when case is selected
+  - `fallback`: item model to render if none of the cases matched the value
+    - if not present, placeholder "missing" model will be rendered instead
+
+### `minecraft:range_dispatch`
+
+- Renders an item model based on numeric property
+- Will select last entry with threshold less or equal to property value
+- Fields:
+
+  - `property`: type of [numeric property](#numericalproperties)
+  - `<property-specific>`: additional fields depending on property type
+  - `scale`: factor to multiply property value with, default: 1.0
+  - `entries`: list of entries in format:
+    - `threshold`: float value
+    - `model`: item model to render when entry is selected
+    - Note: order of fields does not matter, list will be sorted by threshold in ascending order before use
+  - `fallback`: item model to render if no entries were less or equal to property value
+    - if not present, placeholder "missing" model will be rendered instead
+
+### `minecraft:bundle/selected_item`
+
+- Renders selected stack in [`minecraft:bundle_contents` component](../item-components/#minecraftbundle_contents), if present, otherwise does nothing
+
+## Tint source types
+
+These are used by the [`minecraft:model`](#minecraftmodel) item model type.
+
+### `minecraft:constant`
+
+- Returns a constant RGB color
+- Fields:
+  - `value`: A packed integer RGB value (e.g. `-1`) or an array of RGB values (e.g. `[ 1, 1, 1 ]`)
+
+### `minecraft:dye`
+
+- Returns value from [`minecraft:dyed_color` component](../item-components/#minecraftdyed_color) or `default` if not present
+- Fields:
+  - `default`: RGB value
+
+### `minecraft:grass`
+
+- Returns grass color at specific climate parameters, based on `textures/colormap/grass.png`
+- Same colors as ones selected by `downfall` and `temperature` in biome configuration
+- Fields:
+  - `temperature`: float in `0..1` (inclusive) range
+  - `downfall`: float in `0..1` (inclusive) range
+
+### `minecraft:firework`
+
+- Returns average of colors from [`minecraft:firework_explosion` component](../item-components/#minecraftfirework_explosion) or `default` color if there are none
+- Fields:
+  - `default`: RGB value
+
+### `minecraft:potion`
+
+- Returns color from [`minecraft:potion_contents` component](../item-components/#minecraftpotion_contents):
+  - if component is present:
+    - custom color, if there is one present in component
+    - default color, if effect list is empty
+    - average of effect colors, otherwise
+  - default color, otherwise
+- Fields:
+  - `default`: RGB value
+
+### `minecraft:map_color`
+
+- Return value from [`minecraft:map_color` component](../item-components/#minecraftmap_color) or `default` color if component is not present
+  -Fields:
+  `default`: RGB value
+
+### `minecraft:custom_model_data`
+
+- Returns value from colors list in [`minecraft:custom_model_data` component](../item-components/#minecraftcustom_model_data-)
+- Fields:
+  - `index`: index for field in `colors`, default: `0`
+
+## Boolean properties
+
+These are used by the [`minecraft:condition`](#minecraftcondition) item model type.
+
+## Numerical properties
+
+These are used by the [`minecraft:range_dispatch`](#minecraftrange_dispatch) item model type.
+
+## Special model types
+
+These are used by the [`minecraft:special`](#minecraftspecial) item model type.
