@@ -99,7 +99,7 @@ These are used by the [`minecraft:model`](#minecraftmodel) item model type.
 
 ### `minecraft:constant`
 
-- Returns a constant RGB color
+- Returns a constant RGB colour
 - Fields:
   - `value`: A packed integer RGB value (e.g. `-1`) or an array of RGB values (e.g. `[ 1, 1, 1 ]`)
 
@@ -111,40 +111,46 @@ These are used by the [`minecraft:model`](#minecraftmodel) item model type.
 
 ### `minecraft:grass`
 
-- Returns grass color at specific climate parameters, based on `textures/colormap/grass.png`
-- Same colors as ones selected by `downfall` and `temperature` in biome configuration
+- Returns grass colour at specific climate parameters, based on `textures/colormap/grass.png`
+- Same colours as ones selected by `downfall` and `temperature` in biome configuration
 - Fields:
   - `temperature`: float in `0..1` (inclusive) range
   - `downfall`: float in `0..1` (inclusive) range
 
 ### `minecraft:firework`
 
-- Returns average of colors from [`minecraft:firework_explosion` component](../item-components/#minecraftfirework_explosion) or `default` color if there are none
+- Returns average of colours from [`minecraft:firework_explosion` component](../item-components/#minecraftfirework_explosion) or `default` colour if there are none
 - Fields:
   - `default`: RGB value
 
 ### `minecraft:potion`
 
-- Returns color from [`minecraft:potion_contents` component](../item-components/#minecraftpotion_contents):
+- Returns colour from [`minecraft:potion_contents` component](../item-components/#minecraftpotion_contents):
   - if component is present:
-    - custom color, if there is one present in component
-    - default color, if effect list is empty
-    - average of effect colors, otherwise
-  - default color, otherwise
+    - custom colour, if there is one present in component
+    - default colour, if effect list is empty
+    - average of effect colours, otherwise
+  - default colour, otherwise
 - Fields:
   - `default`: RGB value
 
 ### `minecraft:map_color`
 
-- Return value from [`minecraft:map_color` component](../item-components/#minecraftmap_color) or `default` color if component is not present
+- Return value from [`minecraft:map_color` component](../item-components/#minecraftmap_color) or `default` colour if component is not present
   -Fields:
   `default`: RGB value
 
 ### `minecraft:custom_model_data` (tint source)
 
-- Returns value from colors list in [`minecraft:custom_model_data` component](../item-components/#minecraftcustom_model_data-)
+- Returns value from colours list in [`minecraft:custom_model_data` component](../item-components/#minecraftcustom_model_data-)
 - Fields:
   - `index`: index for field in `colors`, default: `0`
+
+### `minecraft:team`
+
+- Returns team colour of context entity, if any
+- Fields:
+  - `default`: RGB value to return when there is no context entity, entity is not in a team or team has no colour
 
 ## Boolean properties
 
@@ -405,7 +411,7 @@ These are used by the [`minecraft:special`](#minecraftspecial) item model type.
 ### `minecraft:shield`
 
 - Renders a shield
-- Uses patterns from [`minecraft:banner_patterns` component](../item-components/#minecraftbanner_patterns) and color from [`minecraft:base_color` component](../item-components/#minecraftbase_color)
+- Uses patterns from [`minecraft:banner_patterns` component](../item-components/#minecraftbanner_patterns) and colour from [`minecraft:base_color` component](../item-components/#minecraftbase_color)
 
 ### `minecraft:trident`
 
