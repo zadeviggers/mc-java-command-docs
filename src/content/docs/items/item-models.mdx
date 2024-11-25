@@ -252,12 +252,6 @@ These are used by the [`minecraft:select`](#minecraftselect) item model type.
 
 These are used by the [`minecraft:range_dispatch`](#minecraftrange_dispatch) item model type.
 
-### `minecraft:custom_model_data` (numeric property)
-
-- Returns value from floats list in the [`minecraft:custom_model_data` component](../item-components/#minecraftcustom_model_data)
-- Fields:
-  - `index` - index for field in floats, default: `0`
-
 ### `minecraft:bundle/fullness`
 
 - Returns weight of the [`minecraft:bundle_contents` component](../item-components/#minecraftbundle_contents) or `0` if not present
@@ -315,6 +309,12 @@ These are used by the [`minecraft:range_dispatch`](#minecraftrange_dispatch) ite
 - Returns remaining use ticks modulo period
 - Fields:
   - `period`: positive float, default `1.0`
+
+### `minecraft:custom_model_data` (numeric property)
+
+- Returns value from floats list in the [`minecraft:custom_model_data` component](../item-components/#minecraftcustom_model_data)
+- Fields:
+  - `index` - index for field in floats, default: `0`
 
 ## Special model types
 
