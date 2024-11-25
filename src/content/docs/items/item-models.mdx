@@ -166,7 +166,8 @@ These are used by the [`minecraft:condition`](#minecraftcondition) item model ty
 
 - Returns true if the given component is present on the item
 - Fields:
-  - `component` - [component type](../item-components/#component-types)
+  - `component`: [component type](../item-components/#component-types)
+  - `ignore_default`: if default component value should be handled as "no component", default: `false`
 
 ### `minecraft:fishing_rod/cast`
 
@@ -176,9 +177,35 @@ These are used by the [`minecraft:condition`](#minecraftcondition) item model ty
 
 - Returns true if bundle is "open", i.e. it has selected item visible in GUI
 
-### `minecraft:xmas`
+### `minecraft:local_time`
 
-- Returns true if current date is between December 24th and December 26th (inclusive)
+- Returns the current time formatted according to a given pattern
+- The value is updated every second
+- For full format documentation for locale, time zone and pattern, see ICU (International Components for Unicode) documentation
+- Fields:
+
+  - `locale`: optional value describing locale
+    - Examples:
+      `en_US`: English language (used for things like week names), formating as in USA
+      `cs_AU@numbers=thai;calendar=japanese`: Czech language, Australian formatting, Thai numerals and Japanese calendar
+    - default value is `""`, which means "root" locale (a set of defaults, including English names)
+  - `time_zone`: optional value describing time zone
+    - If not present, defaults to timezone set on client
+      - Examples:
+        - `Europe/Stockholm`
+        - `GMT+0:45`
+  - `pattern`: describes format to be used for time formatting
+    - Examples:
+      - `yyyy-MM-dd` - 4-digit year number, then 2-digit month number, then 2-digit day of month number, all zero-padded if needed, separated by `-`
+      - `HH:mm:ss` - current time (hours, minutes, seconds), 24-hour cycle, all zero-padded to 2 digits of needed, separated by `:`
+
+- Values: any string
+
+<Aside type="caution">
+	Developer's Note: There is no "use locale set on client" option to avoid
+	unexpected issues when the user's locale does not match the pack developer's
+	one. Also, time is complicated, be careful.
+</Aside>
 
 ### `minecraft:selected`
 
@@ -188,9 +215,18 @@ These are used by the [`minecraft:condition`](#minecraftcondition) item model ty
 
 - Returns true if item is carried between slots in GUI
 
-### `minecraft:shift_down`
+### `minecraft:keybind_down`
 
-- Returns true if player currently holding shift key down
+- Returns `true` if `keybind` is currently active
+- Fields:
+  - `keybind`: keybind ID, same as value in `keybind` text component
+    - Examples: `key.use`, `key.left`
+
+### `minecraft:extended_view`
+
+- Returns true if player has requested extended details by holding shift key down
+  - Note: not a keybind, can't be rebound
+- Only works when item is displayed in UI
 
 ### `minecraft:custom_model_data` (boolean property)
 
@@ -247,6 +283,11 @@ These are used by the [`minecraft:select`](#minecraftselect) item model type.
 - Fields:
   - `index` - index for field in strings, default: `0`
 - Values: any string
+
+### `minecraft:holder_type`
+
+- Returns holding entity type, if present
+- Values: namespaced entity type ID
 
 ## Numerical properties
 
@@ -349,6 +390,9 @@ These are used by the [`minecraft:special`](#minecraftspecial) item model type.
 - Uses `profile` from [`minecraft:profile` component](../item-components/#minecraftprofile) when applicable
 - Fields:
   - `kind`: one of `skeleton`, `wither_skeleton`, `player`, `zombie`, `creeper`, `piglin`, or `dragon`
+  - `texture`: optional namespaced ID for texture, without `textures/entity/` prefix and `.png` suffix
+    - If absent, default texture will be used, depending on `kind` field
+    - Additionally, if present, the `minecraft:profile` component is ignored
 
 ### `minecraft:shulker_box`
 
@@ -371,3 +415,19 @@ These are used by the [`minecraft:special`](#minecraftspecial) item model type.
 
 - Renders a decorated pot
 - Uses values from [`minecraft:pot_decorations` component](../item-components/#minecraftpot_decorations)
+
+### `minecraft:standing_sign`
+
+- Renders a standing sign
+- Fields:
+  - `wood_type`: one of `oak`, `spruce`, `birch`, `acacia`, `cherry`, `jungle`, `dark_oak`, `pale_oak`, `mangrove`, `bamboo`, `crimson`, or `warped`
+  - `texture`: optional namespaced ID for texture, without `textures/entity/signs/` prefix and `.png` suffix
+    - if not present, it will be derived from `wood_type`
+
+### `minecraft:hanging_sign`
+
+- Renders a hanging sign
+- Fields:
+  - `wood_type`: one of `oak`, `spruce`, `birch`, `acacia`, `cherry`, `jungle`, `dark_oak`, `pale_oak`, `mangrove`, `bamboo`, `crimson`, or `warped`
+  - `texture`: optional namespaced ID for texture, without `textures/entity/signs/hanging/` prefix and `.png` suffix
+    - if not present, it will be derived from `wood_type`
