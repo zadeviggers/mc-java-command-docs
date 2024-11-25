@@ -314,10 +314,10 @@ Most components add new functionality, but some replicate functionality that was
 - Can be used to replace the models of items by selecting for the `minecraft:custom_model_data` property in the item model
 - Replaces `CustomModelData` tag
 - Format: object with fields
-  - `floats`: list of floats.
-  - `flags`: list of booleans.
-  - `strings`: list of strings.
-  - `colors`: list of RGB color values
+  - `floats`: list of floats. Used by the [`minecraft:custom_model_data` item model numeric property](../item-models/#minecraftcustom_model_data-numeric-property).
+  - `flags`: list of booleans. Used by the [`minecraft:custom_model_data` item model boolean property](../item-models/#minecraftcustom_model_data-boolean-property).
+  - `strings`: list of strings. Used by the [`minecraft:custom_model_data` item model discrete](../item-models/#minecraftcustom_model_data-discrete-property).
+  - `colors`: list of RGB color values. Used by the [`minecraft:custom_model_data` item model tint source](../item-models/#minecraftcustom_model_data-tint-source).
   - These lists of values are accessed by the various model property getters
 - Can be modified with the `set_custom_model_data` loot function
 
