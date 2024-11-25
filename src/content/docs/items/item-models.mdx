@@ -93,6 +93,10 @@ Item models are selected based on the [`minecraft:item_model` component](../item
 
 - Renders selected stack in [`minecraft:bundle_contents` component](../item-components/#minecraftbundle_contents), if present, otherwise does nothing
 
+### `minecraft:empty`
+
+- Does not render anything
+
 ## Tint source types
 
 These are used by the [`minecraft:model`](#minecraftmodel) item model type.
@@ -207,19 +211,19 @@ These are used by the [`minecraft:condition`](#minecraftcondition) item model ty
 
 - Values: any string
 
-<Aside type="caution">
-	Developer's Note: There is no "use locale set on client" option to avoid
-	unexpected issues when the user's locale does not match the pack developer's
-	one. Also, time is complicated, be careful.
+<Aside type="note">
+	There is no "use locale set on client" option to avoid unexpected issues when
+	the user's locale does not match the pack developer's one. Also, time is
+	complicated, be careful.
 </Aside>
 
 ### `minecraft:selected`
 
-- Returns true if item is selected on a hotbar
+- Returns `true` if item is selected on a hotbar
 
 ### `minecraft:carried`
 
-- Returns true if item is carried between slots in GUI
+- Returns `true` if item is carried between slots in GUI
 
 ### `minecraft:keybind_down`
 
@@ -239,6 +243,12 @@ These are used by the [`minecraft:condition`](#minecraftcondition) item model ty
 - Returns value from `flags` list in the [`minecraft:custom_model_data` component](../item-components/#minecraftcustom_model_data-)
 - Fields:
   - `index`: index for field in `flags`, default: `0`
+
+### `minecraft:view_entity`
+
+- When not spectating, returns `true` if context entity is the local player entity, i.e. one controlled by client
+- When spectating, returns `true` if context entity is the spectated entity
+- If context entity is not present, will return `false`
 
 ## Discrete properties
 
@@ -290,10 +300,22 @@ These are used by the [`minecraft:select`](#minecraftselect) item model type.
   - `index` - index for field in strings, default: `0`
 - Values: any string
 
-### `minecraft:holder_type`
+### `minecraft:context_entity_type`
 
 - Returns holding entity type, if present
 - Values: namespaced entity type ID
+
+<Aside type="note">
+	Context entities were initially used only for compasses and clocks, which
+	means that type is available only in rendering contexts where those items
+	would show correct reading (see
+	[MC-186797](https://bugs.mojang.com/browse/MC-186797) and related bugs).
+</Aside>
+
+### `minecraft:context_dimension`
+
+- Returns the ID of the dimension in context, if any
+- Values: namespaced dimension ID (like `minecraft:overworld`)
 
 ## Numerical properties
 
@@ -328,7 +350,10 @@ These are used by the [`minecraft:range_dispatch`](#minecraftrange_dispatch) ite
 - Returns value of day time (used for clock), scaled to `0..1`
 - Fields:
   - `wobble`: if `true`, value will oscillate for some time around target before settling, default: `true`
-  - `natural_only`: if `true`, value will be random in dimensions with `natural=false`, default: `true`
+  - `source`: time source, possible values:
+    - `daytime` - time of day
+    - `moon_phase` - moon phase
+    - `random` - random value
 
 ### `minecraft:compass`
 
@@ -336,10 +361,11 @@ These are used by the [`minecraft:range_dispatch`](#minecraftrange_dispatch) ite
 - If target is not valid (not present, in other dimension or to close to holder position) random value will be returned
 - Fields:
   - `target`: one of:
-    `spawn`: points at world spawn
-    `lodestone`: points at location stored in [`minecraft:lodestone_tracker` component](../item-components/#minecraftlodestone_tracker)
-    `recovery`: points at last player death location
-    `wobble`: if true, value will oscillate for some time around target before settling, default: `true`
+    - `spawn`: points at world spawn
+    - `lodestone`: points at location stored in [`minecraft:lodestone_tracker` component](../item-components/#minecraftlodestone_tracker)
+    - `recovery`: points at last player death location
+    - `wobble`: if true, value will oscillate for some time around target before settling, default: `true`
+    - `none`: always returns an invalid target
 
 ### `minecraft:crossbow/pull`
 
@@ -399,6 +425,7 @@ These are used by the [`minecraft:special`](#minecraftspecial) item model type.
   - `texture`: optional namespaced ID for texture, without `textures/entity/` prefix and `.png` suffix
     - If absent, default texture will be used, depending on `kind` field
     - Additionally, if present, the `minecraft:profile` component is ignored
+  - `animation`: float controlling head animation (like Piglin ears or Ender Dragon jaw), default: `0.0`
 
 ### `minecraft:shulker_box`
 
