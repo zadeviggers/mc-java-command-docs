@@ -319,3 +319,55 @@ These are used by the [`minecraft:range_dispatch`](#minecraftrange_dispatch) ite
 ## Special model types
 
 These are used by the [`minecraft:special`](#minecraftspecial) item model type.
+
+### `minecraft:bed`
+
+- Renders a whole bed
+- Fields:
+  - `texture`: namespaced ID for texture, without `textures/entity/bed/` prefix and `.png` suffix
+
+### `minecraft:banner`
+
+- Renders a banner with patterns from [`minecraft:banner_patterns` component](../item-components/#minecraftbanner_patterns)
+- Fields:
+  - `color`: colour of banner base, one of 16 predefined colours
+
+### `minecraft:conduit`
+
+- Renders conduit
+
+### `minecraft:chest`
+
+- Renders a single chest
+- Fields:
+  - `texture`: namespaced ID for texture, without `textures/entity/chest/` prefix and `.png` suffix
+  - `openness`: float, `0.0` (default) - fully closed, `1.0` - fully open
+
+### `minecraft:head`
+
+- Renders a head
+- Uses `profile` from [`minecraft:profile` component](../item-components/#minecraftprofile) when applicable
+- Fields:
+  - `kind`: one of `skeleton`, `wither_skeleton`, `player`, `zombie`, `creeper`, `piglin`, or `dragon`
+
+### `minecraft:shulker_box`
+
+- Renders a shulker box
+- Fields:
+  - `texture`: namespaced ID for texture, without `textures/entity/shulker/` prefix and `.png` suffix
+  - `openness`: float, `0.0` (default) - fully closed, `1.0` - fully open
+  - `orientation`: orientation for rendering, default: `up`
+
+### `minecraft:shield`
+
+- Renders a shield
+- Uses patterns from [`minecraft:banner_patterns` component](../item-components/#minecraftbanner_patterns) and color from [`minecraft:base_color` component](../item-components/#minecraftbase_color)
+
+### `minecraft:trident`
+
+- Renders a trident
+
+### `minecraft:decorated_pot`
+
+- Renders a decorated pot
+- Uses values from [`minecraft:pot_decorations` component](../item-components/#minecraftpot_decorations)
