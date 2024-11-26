@@ -21,6 +21,7 @@ export default defineConfig({
         },
       ],
       lastUpdated: true,
+      credits: true,
     }),
   ],
 });
