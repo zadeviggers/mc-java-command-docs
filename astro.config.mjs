@@ -20,6 +20,7 @@ export default defineConfig({
           autogenerate: { directory: "components" },
         },
       ],
+      lastUpdated: true,
     }),
   ],
 });
