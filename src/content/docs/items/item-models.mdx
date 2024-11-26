@@ -38,6 +38,7 @@ Item models are selected based on the [`minecraft:item_model` component](../item
 
 - Renders a plain model from `models` directory
 - Fields:
+
   - `model`: namespaced ID of model in `models` (e.g. `minecraft:block/yellow_glazed_terracotta`)
   - `tints`: a list of tint sources to apply to elements of rendered model (first entry applies to `tintindex` `0`, second one `-1`, etc.)
     - Format:
@@ -206,7 +207,7 @@ These are used by the [`minecraft:condition`](#minecraftcondition) item model ty
 
   - `locale`: optional value describing locale
     - Examples:
-      `en_US`: English language (used for things like week names), formating as in USA
+      `en_US`: English language (used for things like week names), formatting as in USA
       `cs_AU@numbers=thai;calendar=japanese`: Czech language, Australian formatting, Thai numerals and Japanese calendar
     - default value is `""`, which means "root" locale (a set of defaults, including English names)
   - `time_zone`: optional value describing time zone
@@ -216,8 +217,8 @@ These are used by the [`minecraft:condition`](#minecraftcondition) item model ty
         - `GMT+0:45`
   - `pattern`: describes format to be used for time formatting
     - Examples:
-      - `yyyy-MM-dd` - 4-digit year number, then 2-digit month number, then 2-digit day of month number, all zero-padded if needed, separated by `-`
-      - `HH:mm:ss` - current time (hours, minutes, seconds), 24-hour cycle, all zero-padded to 2 digits of needed, separated by `:`
+      - `yyyy-MM-dd`: 4-digit year number, then 2-digit month number, then 2-digit day of month number, all zero-padded if needed, separated by `-`
+      - `HH:mm:ss`: current time (hours, minutes, seconds), 24-hour cycle, all zero-padded to 2 digits of needed, separated by `:`
 
 - Values: any string
 
@@ -307,7 +308,7 @@ These are used by the [`minecraft:select`](#minecraftselect) item model type.
 
 - Returns value from strings list in the [`minecraft:custom_model_data` component](../item-components/#minecraftcustom_model_data-)
 - Fields:
-  - `index` - index for field in strings, default: `0`
+  - `index`: index for field in strings, default: `0`
 - Values: any string
 
 ### `minecraft:context_entity_type`
@@ -357,18 +358,20 @@ These are used by the [`minecraft:range_dispatch`](#minecraftrange_dispatch) ite
 
 ### `minecraft:time`
 
-- Returns value of day time (used for clock), scaled to `0..1`
+- Returns value of day time or moon phase, scaled to `0..1`
+- Used by the [clock](https://minecraft.wiki/w/Clock)
 - Fields:
   - `wobble`: if `true`, value will oscillate for some time around target before settling, default: `true`
   - `source`: time source, possible values:
-    - `daytime` - time of day
-    - `moon_phase` - moon phase
-    - `random` - random value
+    - `daytime`: time of day
+    - `moon_phase`: moon phase
+    - `random`: random value
 
 ### `minecraft:compass`
 
 - Returns angle, scaled to `0..1` in `x-z` plane between holder position and target
 - If target is not valid (not present, in other dimension or to close to holder position) random value will be returned
+- Used by the [compass](https://minecraft.wiki/w/Compass), and the [recovery compass](https://minecraft.wiki/w/Recovery_Compass)
 - Fields:
   - `target`: one of:
     - `spawn`: points at world spawn
@@ -385,7 +388,7 @@ These are used by the [`minecraft:range_dispatch`](#minecraftrange_dispatch) ite
 
 - Returns item use ticks
 - Fields:
-  - `remaining`: if `true`, returned value will be remaining use ticks, if `false` - ticks so far, default: `false`
+  - `remaining`: if `true`, returned value will be remaining use ticks, if `false`: ticks so far, default: `false`
 
 ### `minecraft:use_cycle`
 
@@ -397,7 +400,7 @@ These are used by the [`minecraft:range_dispatch`](#minecraftrange_dispatch) ite
 
 - Returns value from floats list in the [`minecraft:custom_model_data` component](../item-components/#minecraftcustom_model_data-)
 - Fields:
-  - `index` - index for field in floats, default: `0`
+  - `index`: index for field in floats, default: `0`
 
 ## Special model types
 
@@ -405,30 +408,30 @@ These are used by the [`minecraft:special`](#minecraftspecial) item model type.
 
 ### `minecraft:bed`
 
-- Renders a whole bed
+- Renders [a whole bed](https://minecraft.wiki/w/Bed)
 - Fields:
   - `texture`: namespaced ID for texture, without `textures/entity/bed/` prefix and `.png` suffix
 
 ### `minecraft:banner`
 
-- Renders a banner with patterns from [`minecraft:banner_patterns` component](../item-components/#minecraftbanner_patterns)
+- Renders [a banner](https://minecraft.wiki/w/Banner) with patterns from [`minecraft:banner_patterns` component](../item-components/#minecraftbanner_patterns)
 - Fields:
   - `color`: colour of banner base, one of 16 predefined colours
 
 ### `minecraft:conduit`
 
-- Renders conduit
+- Renders a [conduit](https://minecraft.wiki/w/Conduit)
 
 ### `minecraft:chest`
 
-- Renders a single chest
+- Renders a [single chest](https://minecraft.wiki/w/Chest)
 - Fields:
   - `texture`: namespaced ID for texture, without `textures/entity/chest/` prefix and `.png` suffix
-  - `openness`: float, `0.0` (default) - fully closed, `1.0` - fully open
+  - `openness`: float, `0.0` (default) - fully closed, `1.0`: fully open
 
 ### `minecraft:head`
 
-- Renders a head
+- Renders a [head](https://minecraft.wiki/w/Head)
 - Uses `profile` from [`minecraft:profile` component](../item-components/#minecraftprofile) when applicable
 - Fields:
   - `kind`: one of `skeleton`, `wither_skeleton`, `player`, `zombie`, `creeper`, `piglin`, or `dragon`
@@ -439,29 +442,29 @@ These are used by the [`minecraft:special`](#minecraftspecial) item model type.
 
 ### `minecraft:shulker_box`
 
-- Renders a shulker box
+- Renders a [shulker box](https://minecraft.wiki/w/Shulker_Box)
 - Fields:
   - `texture`: namespaced ID for texture, without `textures/entity/shulker/` prefix and `.png` suffix
-  - `openness`: float, `0.0` (default) - fully closed, `1.0` - fully open
+  - `openness`: float, `0.0` (default) - fully closed, `1.0`: fully open
   - `orientation`: orientation for rendering, default: `up`
 
 ### `minecraft:shield`
 
-- Renders a shield
+- Renders a [shield](https://minecraft.wiki/w/Shield)
 - Uses patterns from [`minecraft:banner_patterns` component](../item-components/#minecraftbanner_patterns) and colour from [`minecraft:base_color` component](../item-components/#minecraftbase_color)
 
 ### `minecraft:trident`
 
-- Renders a trident
+- Renders a [trident](https://minecraft.wiki/w/Trident)
 
 ### `minecraft:decorated_pot`
 
-- Renders a decorated pot
+- Renders a [decorated pot](https://minecraft.wiki/w/Decorated_Pot)
 - Uses values from [`minecraft:pot_decorations` component](../item-components/#minecraftpot_decorations)
 
 ### `minecraft:standing_sign`
 
-- Renders a standing sign
+- Renders a [standing sign](https://minecraft.wiki/w/Sign)
 - Fields:
   - `wood_type`: one of `oak`, `spruce`, `birch`, `acacia`, `cherry`, `jungle`, `dark_oak`, `pale_oak`, `mangrove`, `bamboo`, `crimson`, or `warped`
   - `texture`: optional namespaced ID for texture, without `textures/entity/signs/` prefix and `.png` suffix
@@ -469,7 +472,7 @@ These are used by the [`minecraft:special`](#minecraftspecial) item model type.
 
 ### `minecraft:hanging_sign`
 
-- Renders a hanging sign
+- Renders a [hanging sign](https://minecraft.wiki/w/Hanging_Sign)
 - Fields:
   - `wood_type`: one of `oak`, `spruce`, `birch`, `acacia`, `cherry`, `jungle`, `dark_oak`, `pale_oak`, `mangrove`, `bamboo`, `crimson`, or `warped`
   - `texture`: optional namespaced ID for texture, without `textures/entity/signs/hanging/` prefix and `.png` suffix
