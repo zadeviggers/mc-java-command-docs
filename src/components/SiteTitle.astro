@@ -6,7 +6,7 @@ const { siteTitle, siteTitleHref } = Astro.props;
 
 <div class="title-wrapper sl-flex">
   <a href={siteTitleHref} class="site-title">{siteTitle}</a>
-  <Badge text="Up to date for 1.21.3" variant="success" />
+  <Badge text="Up to date for 1.21.3" variant="success" class="update-label" />
 </div>
 
 <style>
@@ -20,5 +20,10 @@ const { siteTitle, siteTitleHref } = Astro.props;
     color: var(--sl-color-text-accent);
     text-decoration: none;
     white-space: nowrap;
+  }
+  @media screen and (max-width: 600px) {
+    .update-label {
+      display: none;
+    }
   }
 </style>
