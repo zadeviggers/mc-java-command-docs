@@ -23,7 +23,13 @@ Item models are selected based on the [`minecraft:item_model` component](../item
 - The model for item with `item_model=foo:bar` is stored in `/assets/foo/items/bar.json`
 
 ```json
-{ "model": {"type": <item model type>, <item model type specific fields> } }
+// /assets/foo/items/bar.json
+{
+  "model": {
+    "type": <item model type>,
+    <item model type specific fields>
+  }
+}
 ```
 
 ## Item model types
