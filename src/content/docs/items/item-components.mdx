@@ -55,6 +55,23 @@ Most recipe types now accept `components` for the `result` item stack. This enab
 
 When `crafting_transmute` is used, the item type changes but all item components are preserved.
 
+Example: crafting an enchanted potato
+
+```json
+{
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": ["minecraft:stick", "minecraft:cherry_sapling"],
+	"result": {
+		"id": "minecraft:poisonous_potato",
+		"components": {
+			"minecraft:enchantments": {
+				"minecraft:knockback": 255
+			}
+		}
+	}
+}
+```
+
 ## Component types
 
 Most components add new functionality, but some replicate functionality that was available with the NBT system.
