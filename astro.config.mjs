@@ -18,6 +18,10 @@ export default defineConfig({
 					label: "Items",
 					autogenerate: { directory: "items" },
 				},
+				{
+					label: "Other",
+					autogenerate: { directory: "other" },
+				},
 			],
 		}),
 	],
