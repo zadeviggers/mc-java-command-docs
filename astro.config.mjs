@@ -7,7 +7,7 @@ export default defineConfig({
   site: "https://mcdocs.zade.viggers.net/",
   integrations: [
     starlight({
-      title: "MC:JE Reference Docs",
+      title: "Java Edition Reference Docs",
       social: {
         github: "https://github.com/zadeviggers/mc-java-command-docs",
       },
@@ -22,6 +22,7 @@ export default defineConfig({
       ],
       lastUpdated: true,
       credits: true,
+      customCss: ["./src/theme.css"],
     }),
   ],
 });
