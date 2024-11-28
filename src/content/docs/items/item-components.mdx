@@ -59,16 +59,16 @@ Example: crafting an enchanted potato
 
 ```json
 {
-	"type": "minecraft:crafting_shapeless",
-	"ingredients": ["minecraft:stick", "minecraft:cherry_sapling"],
-	"result": {
-		"id": "minecraft:poisonous_potato",
-		"components": {
-			"minecraft:enchantments": {
-				"minecraft:knockback": 255
-			}
-		}
-	}
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": ["minecraft:stick", "minecraft:cherry_sapling"],
+  "result": {
+    "id": "minecraft:poisonous_potato",
+    "components": {
+      "minecraft:enchantments": {
+        "minecraft:knockback": 255
+      }
+    }
+  }
 }
 ```
 
@@ -312,6 +312,7 @@ Most components add new functionality, but some replicate functionality that was
 ### `minecraft:potion_contents` <Badge text="Changed in 1.21.2" variant="caution" />
 
 - Holds the contents of a potion (Potion, Splash Potion, Lingering Potion), or potion applied to an item (Tipped Arrow)
+- Cam be applied by eating an item with the [`minecraft:consumable` component](#minecraftconsumable)
 - Format: object with fields
   - `potion`: potion id (optional)
     - The potion type in this item: the item will inherit all effects from this
@@ -370,7 +371,7 @@ Most components add new functionality, but some replicate functionality that was
 
 ### `minecraft:suspicious_stew`
 
-- Holds the effects that will be applied when consuming Suspicious Stew
+- Holds the effects that will be applied when consuming Suspicious Stew with the [`minecraft:consumable` component](#minecraftconsumable)
 - Format: list of effect objects with fields
   - `id`: effect id
   - `duration`: integer, tick count (default: `160`)
@@ -591,7 +592,7 @@ Most components add new functionality, but some replicate functionality that was
 ### `minecraft:food` <Badge text="Changed in 1.21.2" variant="caution" />
 
 - A data container which only holds the food stats applied when the item is consumed
-- Does not enable the item to be eaten. That requires the [`consumable` component](#minecraftconsumable).
+- Does not enable the item to be eaten. That requires the [`minecraft:consumable` component](#minecraftconsumable).
 - Format: object with fields
   - `nutrition`: Non-negative integer, the amount of nutrition applied when consumed
   - `saturation`: Float, the amount of saturation applied when consumed
@@ -650,8 +651,8 @@ Most components add new functionality, but some replicate functionality that was
 ### `minecraft:damage_resistant` <Badge text="Changed in 1.21.2" variant="caution" />
 
 <Aside type="caution">
-	In 1.21.2 this component was renamed from `minecraft:fire_resistant` to
-	`minecraft:damage_resistant`
+  In 1.21.2 this component was renamed from `minecraft:fire_resistant` to
+  `minecraft:damage_resistant`
 </Aside>
 
 - Items with this component, when in entity form, will be resistant to the damage types included in the `types` tag
@@ -674,6 +675,7 @@ Most components add new functionality, but some replicate functionality that was
 ### `minecraft:ominous_bottle_amplifier`
 
 - Controls the amplifier amount for an Ominous Bottle's Bad Omen effect
+- Cam be applied by eating an item with the [`minecraft:consumable` component](#minecraftconsumable)
 - Format: integer between 0 and 4
   - e.g. `ominous_bottle_amplifier=3`
 - Can be modified with the `set_ominous_bottle_amplifier` loot function
@@ -691,7 +693,7 @@ Most components add new functionality, but some replicate functionality that was
 ### `minecraft:consumable` <Badge text="Since 1.21.2" variant="tip" />
 
 - If present, this item can be consumed on use
-  - If `food`, `potion_contents`, `ominous_bottle_amplifier` or `suspicious_stew_contents` are also present on this item, consuming this will apply the stats and effects of those components
+  - If [`minecraft:food`](#minecraftfood), [`minecraft:potion_contents`](#minecraftpotion_contents), [`minecraft:ominous_bottle_amplifier`](#minecraftominous_bottle_amplifier) or [`minecraft:suspicious_stew`](#minecraftsuspicious_stew) are also present on this item, consuming this will apply the stats and effects of those components
 - Format: object with fields
   - `consume_seconds`: Non-negative float (default `1.6`)
     - The amount of seconds it takes for a player to consume the item.
