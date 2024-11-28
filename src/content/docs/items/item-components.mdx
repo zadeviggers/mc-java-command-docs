@@ -697,15 +697,15 @@ Most components add new functionality, but some replicate functionality that was
 - Format: object with fields
   - `consume_seconds`: Non-negative float (default `1.6`)
     - The amount of seconds it takes for a player to consume the item.
-  - animation: The animation used during consumption of the item
+  - `animation`: The animation used during consumption of the item
     - Default value: `eat`
     - Accepted values:
-      - `none`
+      - `none` (you still need to wait `consume_seconds` before `on_consume_effects`)
       - `eat`
       - `drink`
       - `block`
       - `bow`
-      - `spear`
+      - `spear` (this is the trident animation)
       - `crossbow`
       - `spyglass`
       - `toot_horn`
@@ -730,6 +730,12 @@ Most components add new functionality, but some replicate functionality that was
     - `minecraft:play_sound`
       - `sound`: Sound event, played once consumed
   - e.g. `consumable={consume_seconds:3.0, animation:'eat', sound:'entity.generic.eat', has_consume_particles:true, on_consume_effects:[{type:'minecraft:clear_all_effects'}]}`
+
+<Aside type="note">
+  Currently, despite this component allowing you to play the bow and trident
+  charging animations, you cannot replicate their functionality of pausing once
+  charged, or firing a projectile when released.
+</Aside>
 
 ### `minecraft:use_remainder` <Badge text="Since 1.21.2" variant="tip" />
 
