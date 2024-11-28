@@ -1,0 +1,75 @@
+/* Generated using the starlight theme generator.
+
+The accent colour is minecraft legends lightblue, and the grey is vanilla slate.
+Colours take from here: https://www.boldscandinavia.com/work/minecraft/
+*/
+
+/* Dark mode colors. */
+:root {
+  --sl-color-accent-low: #052833;
+  --sl-color-accent: #007592;
+  --sl-color-accent-high: #abd0dd;
+  --sl-color-white: #ffffff;
+  --sl-color-gray-1: #eaedf8;
+  --sl-color-gray-2: #c4c8d5;
+  --sl-color-gray-3: #9ba3bc;
+  --sl-color-gray-4: #50576e;
+  --sl-color-gray-5: #31374c;
+  --sl-color-gray-6: #202639;
+  --sl-color-black: #151821;
+
+  --sl-color-red: #cc1717;
+  --sl-color-red-high: #fea3a2;
+  --sl-color-red-low: #810100;
+
+  --sl-color-purple: #643acb;
+  --sl-color-purple-high: #bca4ec;
+  --sl-color-purple-low: #210a80;
+
+  --sl-color-blue: #1e6eea;
+  --sl-color-blue-high: #5b9ffb;
+  --sl-color-blue-low: #002fae;
+
+  --sl-color-green: #6cc349;
+  --sl-color-green-high: #a0e081;
+  --sl-color-green-low: #2a641c;
+
+  --sl-color-orange: #ff481b;
+  --sl-color-orange-high: #ff925b;
+  --sl-color-orange-low: #6b1202;
+}
+/* Light mode colors. */
+:root[data-theme="light"] {
+  --sl-color-accent-low: #c1dce7;
+  --sl-color-accent: #00566b;
+  --sl-color-accent-high: #003948;
+  --sl-color-white: #151821;
+  --sl-color-gray-1: #202639;
+  --sl-color-gray-2: #31374c;
+  --sl-color-gray-3: #50576e;
+  --sl-color-gray-4: #838ba3;
+  --sl-color-gray-5: #bdc2cf;
+  --sl-color-gray-6: #eaedf8;
+  --sl-color-gray-7: #f4f6fc;
+  --sl-color-black: #ffffff;
+
+  --sl-color-red: #cc1717;
+  --sl-color-red-low: #fea3a2;
+  --sl-color-red-high: #810100;
+
+  --sl-color-purple: #643acb;
+  --sl-color-purple-low: #bca4ec;
+  --sl-color-purple-high: #210a80;
+
+  --sl-color-blue: #1e6eea;
+  --sl-color-blue-low: #5b9ffb;
+  --sl-color-blue-high: #002fae;
+
+  --sl-color-green: #6cc349;
+  --sl-color-green-low: #a0e081;
+  --sl-color-green-high: #2a641c;
+
+  --sl-color-orange: #ff7e1b;
+  --sl-color-orange-low: #ffd3bd;
+  --sl-color-orange-high: #974600;
+}

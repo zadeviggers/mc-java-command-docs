@@ -5,20 +5,25 @@ const { siteTitle, siteTitleHref } = Astro.props;
 ---
 
 <div class="title-wrapper sl-flex">
-	<a href={siteTitleHref} class="site-title">{siteTitle}</a>
-	<Badge text="Up to date for 1.21.4" variant="success" />
+  <a href={siteTitleHref} class="site-title">{siteTitle}</a>
+  <Badge text="Up to date for 1.21.4" variant="success" class="update-label" />
 </div>
 
 <style>
-	.title-wrapper {
-		align-items: center;
-		gap: var(--sl-nav-gap);
-	}
-	.site-title {
-		font-size: var(--sl-text-h4);
-		font-weight: 600;
-		color: var(--sl-color-text-accent);
-		text-decoration: none;
-		white-space: nowrap;
-	}
+  .title-wrapper {
+    align-items: center;
+    gap: var(--sl-nav-gap);
+  }
+  .site-title {
+    font-size: var(--sl-text-h4);
+    font-weight: 600;
+    color: var(--sl-color-text-accent);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  @media screen and (max-width: 660px) {
+    .update-label {
+      display: none;
+    }
+  }
 </style>
