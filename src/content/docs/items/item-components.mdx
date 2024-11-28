@@ -219,7 +219,6 @@ Most components add new functionality, but some replicate functionality that was
 - Format: list of item stacks
   - Cannot store empty/air items
   - e.g. `charged_projectiles=[{id:'minecraft:arrow'}]`
-  - No longer restricted to 3 entries
 - Can be modified with the `modify_contents` and `set_contents` loot functions
 
 ### `minecraft:intangible_projectile`
@@ -363,7 +362,6 @@ Most components add new functionality, but some replicate functionality that was
 ### `minecraft:trim`
 
 - Holds the trims applied to an item
-  - Presence of the component is no longer restricted by the `#minecraft:trimmable_armor` item tag (although, this tag is still used for recipes)
 - Format: object with fields
   - `pattern`: pattern id (or inline pattern)
   - `material`: material id (or inline material)
