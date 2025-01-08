@@ -312,7 +312,8 @@ Most components add new functionality, but some replicate functionality that was
 ### `minecraft:potion_contents` <Badge text="Changed in 1.21.2" variant="caution" />
 
 - Holds the contents of a potion (Potion, Splash Potion, Lingering Potion), or potion applied to an item (Tipped Arrow)
-- Cam be applied by eating an item with the [`minecraft:consumable` component](#minecraftconsumable)
+- Can be applied by eating an item with the [`minecraft:consumable` component](#minecraftconsumable)
+- Duration can be scaled with the [`minecraft:potion_duration_scale` component](#minecraftpotion_duration_scale)
 - Format: object with fields
   - `potion`: potion id (optional)
     - The potion type in this item: the item will inherit all effects from this
@@ -620,6 +621,7 @@ Most components add new functionality, but some replicate functionality that was
 
 - Controls the behavior of the item as a tool
 - Format: object with fields
+
   - `rules`: list of rule entries to apply in order
     - `blocks`: single block, list of blocks, or `#`-prefixed block tag to match
     - `speed` (optional): float, overrides the mining speed if present and matched
@@ -627,7 +629,13 @@ Most components add new functionality, but some replicate functionality that was
       - `true` will cause the block to mine at its most efficient speed, and drop items if the targeted block requires that
   - `default_mining_speed`: float, mining speed to use if no rules match and override mining speed (default: `1.0`)
   - `damage_per_block`: non-negative int, amount of durability to remove each time a block is mined with this tool
+  - `can_destroy_blocks_in_creative` (optional): boolean
+
+    - If `false`, players cannot break blocks while holding this tool in Creative Mode
+    - Defaults to `true`
+
   - e.g. `tool={rules:[{blocks:"#mineable/pickaxe",speed:4.0,correct_for_drops:true}]}`
+
 - Vanilla tool items will have an implicit default value based on their tier and tool type
 
 ### `minecraft:hide_tooltip`
@@ -819,3 +827,22 @@ Most components add new functionality, but some replicate functionality that was
 - Format: object with fields
   - `value`: Positive integer, a higher value allows enchantments with a higher cost to be picked
   - e.g. `enchantable={value:15}`
+
+### `minecraft:weapon` <Badge text="Since 1.22?" variant="tip" />
+
+- When present, the 'Item Used' statistic will be incremented for each attack with the item
+- The specified amount of damage can be done to the item with each attack
+- Format: object with fields:
+  - `damage_per_attack`: non-negative integer (default: `1`)
+    - The amount to damage the weapon for each attack performed
+  - `can_disable_blocking`: boolean (default: `false`)
+    - If true, will disable a blocking Shield on successful attack
+  - e.g. `weapon={damage_per_attack:2}`
+
+### `minecraft:potion_duration_scale` <Badge text="Since 1.22?" variant="tip" />
+
+- When present, for items that have the [`minecraft:potion_contents` component](#minecraftpotion_contents), the duration of the applied effects will be scaled by this factor
+- This also applies to `custom_effects` in the [`minecraft:potion_contents` component](#minecraftpotion_contents), unlike the previous hardcoded scaling factor
+- If not specified, defaults to `1.0`
+- Format: non-negative float
+- e.g. `potion_duration_scale=0.25`
