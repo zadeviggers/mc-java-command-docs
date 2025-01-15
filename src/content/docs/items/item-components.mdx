@@ -771,12 +771,11 @@ Most components add new functionality, but some replicate functionality that was
   - `namespace:id` will reference model `/assets/<namespace>/items/<id>`
   - e.g. model for item with `item_model=foo:bar` is stored in `/assets/foo/items/bar.json`
 
-### `minecraft:equippable` <Badge text="Since 1.21.2" variant="tip" /> <Badge text="Changed in 1.22?" variant="caution" />
+### `minecraft:equippable` <Badge text="Since 1.21.2" variant="tip" /> <Badge text="Changed in 1.21.4" variant="caution" />
 
 - If present, this item can be equipped by players in the selected slot
-- Any mob can have equipment added in the `body` slot as long as the component allows it (`allowed_entities`)
 - Format: object with fields
-  - `slot`: one of `saddle`, `head`, `chest`, `legs`, `feet`, `body`, `mainhand`, or `offhand`
+  - `slot`: one of `head`, `chest`, `legs`, `feet`, `body`, `mainhand`, or `offhand`
   - `equip_sound` (optional): Sound event to play when the item is equipped
     - If not specified, the default armor equip sound will be played
   - `asset_id` (optional): namespaced ID of the equipment model to use when equipped
@@ -792,9 +791,6 @@ Most components add new functionality, but some replicate functionality that was
     - If the item type has special dispenser behavior, this will have no effect
   - `swappable`: boolean (default: `true`), whether the item can be equipped into the relevant slot by right-clicking
   - `damage_on_hurt`: boolean (default: `true`), whether this item will be damaged when the wearing entity is damaged
-  - `equip_on_interact`: boolean (default: `false`)
-    - If `true`, players can equip this item onto a target mob by right-clicking it (as long as this item can be equipped on the target at all)
-    - The item will not be equipped if the target already has an item in the relevant slot
   - e.g. `equippable={slot:'chest',equip_sound:'item.armor.equip_chain'}`
 
 ### `minecraft:glider` <Badge text="Since 1.21.2" variant="tip" />
@@ -837,7 +833,7 @@ Most components add new functionality, but some replicate functionality that was
 - When present, the 'Item Used' statistic will be incremented for each attack with the item
 - The specified amount of damage can be done to the item with each attack
 - Format: object with fields:
-  - `item_damage_per_attack`: non-negative integer (default: `1`)
+  - `damage_per_attack`: non-negative integer (default: `1`)
     - The amount to damage the weapon for each attack performed
   - `can_disable_blocking`: boolean (default: `false`)
     - If true, will disable a blocking Shield on successful attack
