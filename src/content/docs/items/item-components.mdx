@@ -73,9 +73,45 @@ Example: crafting an enchanted potato
 }
 ```
 
+## Entity variant components <Badge text="Since 1.22?" variant="tip" size="large" />
+
+- Entities have a set of components for configuring variants and other aspects of appearance
+- If those components are present on spawning item (like spawn eggs, mob buckets, `minecraft:painting`, `minecraft:item_frame`), they will be applied to new entity
+- Mob buckets and paintings available in creative menu use variants instead of [`minecraft:entity_data` component](#minecraftentity_data)
+- Custom tooltips for Bucket of Tropical Fish and Painting items are now based on new components instead of [`minecraft:bucket_entity_data`](#minecraftbucket_entity_data) and [`minecraft:entity_data`](#minecraftentity_data)
+
+<Aside variant="caution">
+  Components are currently not restored when spawn egg is picked from existing
+  entity
+</Aside>
+
+### List of entity variant components
+
+- `villager/variant`: one of `desert`, `jungle`, `plains`, `savanna`, `snow`, `swamp`, or `taiga`
+- `wolf/variant`: namespaced id from `wolf_variant` registry
+- `wolf/collar`: one of 16 dye colors
+- `fox/variant`: `red` or `snow`
+- `salmon/size`: one of `small`, `medium`, or `large`
+- `parrot/variant`: one of `red_blue`, `blue`, `green`, `yellow_blue`, or `gray`
+- `tropical_fish/pattern`: one of `kob`, `sunstreak`, `snooper`, `dasher`, `brinely`, `spotty`, `flopper`, `stripey`, `glitter`, `blockfish`, `betty`, or `clayfish`
+- `tropical_fish/base_color`: one of 16 dye colors
+- `tropical_fish/pattern_color`: one of 16 dye colors
+- `mooshroom/variant`: `red` or `brown`
+- `rabbit/variant`: one of `brown`, `white`, `black`, `white_splotched`, `gold`, `salt`, or `evil`
+- `pig/variant`: namespaced id from `pig_variant` registry
+- `frog/variant`: namespaced id from `frog_variant` registry
+- `horse/variant`: one of `white`, `creamy`, `chestnut`, `brown`, `black`, `gray`, or `dark_brown`
+- `painting/variant`: namespaced id from `painting_variant` registry
+- `llama/variant`: one of `creamy`, `white`, `brown`, or `gray`
+- `axolotl/variant`: one of `lucy`, `wild`, `gold`, `cyan`, or `blue`
+- `cat/variant`: namespaced id from `cat_variant` registry
+- `cat/collar`: one of 16 dye colors
+- `sheep/color`: one of 16 dye colors
+- `shulker/color`: one of 16 dye colors
+
 ## Component types
 
-Most components add new functionality, but some replicate functionality that was available with the NBT system.
+See above for a list of entity variant components.
 
 ### `minecraft:custom_data`
 
@@ -401,6 +437,11 @@ Most components add new functionality, but some replicate functionality that was
   - Any additional fields will be merged into the entity when spawned
   - e.g. `entity_data={id:'minecraft:pig',Health:1.0f}`
 
+<Aside variant="tip">
+  [Entity variant components](#entity-variant-components) are now used to store
+  mob appearance variants.
+</Aside>
+
 ### `minecraft:bucket_entity_data`
 
 - Stores unstructured NBT data to apply to an entity when placed from a bucket
@@ -408,6 +449,11 @@ Most components add new functionality, but some replicate functionality that was
   - Can contain any of the above listed fields, which will be applied to the entity when placed
   - e.g. `bucket_entity_data={NoAI:1,Age:43}`
 - On bucketed mob items, has an implicit default value of: `{}`
+
+<Aside variant="tip">
+  [Entity variant components](#entity-variant-components) are now used to store
+  mob appearance variants.
+</Aside>
 
 ### `minecraft:instrument`
 
