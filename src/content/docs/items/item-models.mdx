@@ -257,6 +257,14 @@ These are used by the [`minecraft:condition`](#minecraftcondition) item model ty
 - When spectating, returns `true` if context entity is the spectated entity
 - If context entity is not present, will return `false`
 
+### `minecraft:component` (boolean property)
+
+- Uses component predicates (like ones used in item predicates) to match item components
+- However, instead of encoding them as a map of `<predicate type>:<predicate value>`, a single predicate is encoded in two fields
+- Fields:
+  - `predicate`: type of component predicate (member of `minecraft:data_component_predicate_type` registry)
+  - `value`: predicate-specific value
+
 ## Discrete properties
 
 These are used by the [`minecraft:select`](#minecraftselect) item model type.
@@ -324,13 +332,14 @@ These are used by the [`minecraft:select`](#minecraftselect) item model type.
 - Returns the ID of the dimension in context, if any
 - Values: namespaced dimension ID (like `minecraft:overworld`)
 
-### `minecraft:component`
+### `minecraft:component` (discrete property)
 
 - Returns value of [component](/items/item-components/) on item, if any
 - Fields:
   - `component`: namespaced ID of component type
 - Possible values: depends on component type
   - Example: if `component` is set to `minecraft:wolf/collar`, list of cases will accept dye colors, like lime
+- If the selected value comes from a registry and the current datapacks do not provide it, the entry will be silently ignored
 
 ## Numerical properties
 
