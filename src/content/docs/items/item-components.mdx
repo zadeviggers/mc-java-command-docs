@@ -87,7 +87,7 @@ Example: crafting an enchanted potato
   entity
 </Aside>
 
-### List of entity variant components
+### List of entity variant components <Badge text="Changed in 1.22?" variant="caution" />
 
 - `villager/variant`: one of `desert`, `jungle`, `plains`, `savanna`, `snow`, `swamp`, or `taiga`
 - `wolf/variant`: namespaced id from the [`wolf_variant` registry](https://minecraft.wiki/w/Wolf#Variants)
@@ -142,41 +142,37 @@ See above for a list of entity variant components.
   - e.g. `repair_cost=12`
 - If not set, has an implicit default value of: `0`
 
-### `minecraft:unbreakable`
+### `minecraft:unbreakable` <Badge text="Changed in 1.22?" variant="caution" />
 
 - If set, the item will not lose any durability when used
-- Format: object with fields
-  - `show_in_tooltip`: boolean (default: `true`)
-    - If `true`, an 'Unbreakable' line will be included in the tooltip
-  - e.g. `unbreakable={}`, `unbreakable={show_in_tooltip:false}`
+- Format: empty object
+  - e.g. `unbreakable={}`
+- To modify the tooltip, see [`minecraft:tooltip_display`](#minecrafttooltip_display)
 
-### `minecraft:enchantments`
+### `minecraft:enchantments` <Badge text="Changed in 1.22?" variant="caution" />
 
 - Stores a list of enchantments and their levels on an item
-- Format: object with fields
-  - `levels`: object of enchantment (id string) to level (integer [0; 255])
-  - `show_in_tooltip`: boolean (default: `true`)
-    - If `false`, no enchantments will be shown in the item tooltip
-  - e.g. `enchantments={levels:{'minecraft:protection':2},show_in_tooltip:false}`
-  - Alternatively, can be defined as an inline map of enchantment id to level
-    - e.g. `enchantments={sharpness:1}`
-- If not set, has an implicit default value of: `{levels:{}}`
+- Format: object of enchantment (id string) to level (integer `0-255`)
+  - e.g. `enchantments={'minecraft:protection':2}` or `enchantments={sharpness:1}`
 - Can be modified with the `set_enchantments`, `enchant_randomly`, and `enchant_with_levels` loot functions
+- To modify the tooltip, see [`minecraft:tooltip_display`](#minecrafttooltip_display)
 
-### `minecraft:stored_enchantments`
+### `minecraft:stored_enchantments` <Badge text="Changed in 1.22?" variant="caution" />
 
 - Stores list of enchantments and their levels for an Enchanted Book
 - Unlike `minecraft:enchantments`, the effects provided by enchantments do not apply from this component
-- Format: same as `minecraft:enchantments`
-  - `show_in_tooltip` value replaces 6th bit of `HideFlags` tag
+- Format: object of enchantment (id string) to level (integer `0-255`) (same as [`minecraft:enchantments`](#minecraftenchantments))
+  - e.g. `stored_enchantments={'minecraft:protection':2}` or `stored_enchantments={sharpness:1}`
 - On Enchanted Books, has an implicit default value of: `{levels:{}}`
+- To modify the tooltip, see [`minecraft:tooltip_display`](#minecrafttooltip_display)
 
-### `minecraft:custom_name`
+### `minecraft:custom_name` <Badge text="Changed in 1.22?" variant="caution" />
 
 - Custom name override for an item (as set by renaming with an Anvil)
 - Format: JSON chat component string
   - e.g. `custom_name='{"text": "This item is renamed!", "color": "red"}'`
 - Can be modified with the `set_name` loot function
+- Transferred from a spawning item to a spawned entity
 
 ### `minecraft:lore`
 
@@ -186,71 +182,62 @@ See above for a list of entity variant components.
 - If not set, has an implicit default value of: `[]`
 - Can be modified with the `set_lore` loot function
 
-### `minecraft:can_break`
+### `minecraft:can_break` <Badge text="Changed in 1.22?" variant="caution" />
 
 - Controls which blocks a player in Adventure mode can break with this item
   - These were previously stored as flat strings, but now use the more flexible block predicate format already used in loot tables and advancements
-- Format: object with fields
-  - `predicates`: list of block predicates
-    - `blocks`: block, list of blocks, or hash-prefixed block tag
-    - `nbt`: block entity NBT to match
-    - `state`: map of state property key to values to match
-  - `show_in_tooltip`: boolean (default: `true`)
-  - e.g. `can_break={predicates:[{blocks:'minecraft:furnace',state:{facing:'north'}]}`
-  - Alternatively, can be defined as a single block predicate
-    - e.g. `can_break={blocks:'minecraft:stone'}`
+- Format: single block predicate or list of block predicates
+  - `blocks`: block, list of blocks, or hash-prefixed block tag
+  - `nbt`: block entity NBT to match
+  - `state`: map of state property key to values to match
+  - e.g. `can_break=[{blocks:'minecraft:furnace',state:{facing:'north'}}, {blocks:'minecraft:furnace',state:{facing:'west'}}]`
+  - e.g. `can_break={blocks:'minecraft:stone'}`
+- To modify the tooltip, see [`minecraft:tooltip_display`](#minecrafttooltip_display)
 
-### `minecraft:can_place_on`
+### `minecraft:can_place_on` <Badge text="Changed in 1.22?" variant="caution" />
 
 - Controls which blocks a player in Adventure mode can place on with this item
-- Format: object with fields
-  - `predicates`: list of block predicates
-    - Same as `can_break.predicates`
-  - `show_in_tooltip`: boolean (default: `true`)
-  - e.g. `can_place_on={predicates:[{blocks:'minecraft:furnace',state:{facing:'north'}]}`
-  - Alternatively, can be defined as a single block predicate
-    - e.g. `can_place_on={blocks:'minecraft:stone'}`
+- Format: single block predicate or list of block predicates
+  - Same as `can_break.predicates`
+  - e.g. `can_place_on=[{blocks:'minecraft:furnace',state:{facing:'north'}}, {blocks:'minecraft:furnace',state:{facing:'south'}}]` (list format)
+  - e.g. `can_place_on={blocks:'minecraft:stone'}` (single element format)
+- To modify the tooltip, see [`minecraft:tooltip_display`](#minecrafttooltip_display)
 
-### `minecraft:dyed_color`
+### `minecraft:dyed_color` <Badge text="Changed in 1.22?" variant="caution" />
 
 - Represents a color applied to a dyeable item (in the `#minecraft:dyeable` item tag)
-- Format: object with fields
-  - `rgb`: integer, RGB value
-  - `show_in_tooltip`: boolean (default: `true`)
-  - e.g. `dyed_color={rgb:16711680}`
-  - Alternatively, can be defined as an inline integer RGB value
-    - e.g. `dyed_color=16711680`
+- Format: RGB value
+  - e.g. `dyed_color=16711680` (integer format)
+  - e.g. `dyed_color=[0.5, 1.0, 0.2]` (array format)
+- To modify the tooltip, see [`minecraft:tooltip_display`](#minecrafttooltip_display)
 
-### `minecraft:attribute_modifiers`
+### `minecraft:attribute_modifiers` <Badge text="Changed in 1.22?" variant="caution" />
 
 - Holds attribute modifiers applied to any item
-- Format: object with fields (default: `{modifiers:[]}`)
-  - `modifiers`: list of attribute modifiers
-    - `type`: an [attribute id](https://minecraft.wiki/w/Attribute#Attributes)
-    - `slot`: one of:
-      - `any` (default)
-      - `hand`: either in main or offhand
-      - `armor`: any armour slot
-      - `mainhand`
-      - `offhand`
-      - `head`
-      - `chest`
-      - `legs`
-      - `feet`
-      - `body`
-      - Modifiers will only apply when the item is equipped in the specified slot
-    - `id`: This is a unique identifier per attribute for the modifier
-    - `amount`: double, number of units to modify this attribute (controlled by `operation`)
-    - `operation`: one of:
-      - `add_value`: Adds `amount` to the attribute
-      - `add_multiplied_base`: Adds `amount` \* base value to the attribute
-      - `add_multiplied_total`: Adds `amount` \* total value (from all previous modifiers) to the attribute
-  - `show_in_tooltip`: boolean (default: `true`)
-  - e.g. `attribute_modifiers={modifiers:[{type:'minecraft:generic.scale',uuid:[1,2,3,4],name:'Big!',amount:1.0,operation:'add_multiplied_base'}]}`
-  - Alternatively, can be defined as a direct list of modifiers
-    - e.g. `attribute_modifiers=[{type:'generic.scale',uuid:[1,2,3,4],name:'Big!',amount:1.0,operation:'add_multiplied_base'}]`
+- Format: list of attribute modifiers
+  - `type`: an [attribute id](https://minecraft.wiki/w/Attribute#Attributes)
+  - `slot`: one of:
+    - `any` (default)
+    - `hand`: either in main or offhand
+    - `armor`: any armour slot
+    - `mainhand`
+    - `offhand`
+    - `head`
+    - `chest`
+    - `legs`
+    - `feet`
+    - `body`
+    - Modifiers will only apply when the item is equipped in the specified slot
+  - `id`: This is a unique identifier per attribute for the modifier
+  - `amount`: double, number of units to modify this attribute (controlled by `operation`)
+  - `operation`: one of:
+    - `add_value`: Adds `amount` to the attribute
+    - `add_multiplied_base`: Adds `amount` \* base value to the attribute
+    - `add_multiplied_total`: Adds `amount` \* total value (from all previous modifiers) to the attribute
+  - e.g. `attribute_modifiers=[{type:'generic.scale',id:"big_thing",name:'Big!',amount:1.0,operation:'add_multiplied_base'}]`
 - If not set, has an implicit default value based on the item type's default attributes (e.g. attack damage for weapons)
 - Can be modified with the `set_attributes` loot function
+- To modify the tooltip, see [`minecraft:tooltip_display`](#minecrafttooltip_display)
 
 ### `minecraft:charged_projectiles`
 
@@ -348,7 +335,7 @@ See above for a list of entity variant components.
   - These lists of values are accessed by the various model property getters
 - Can be modified with the `set_custom_model_data` loot function
 
-### `minecraft:potion_contents` <Badge text="Changed in 1.21.2" variant="caution" />
+### `minecraft:potion_contents` <Badge text="Changed in 1.22?" variant="caution" />
 
 - Holds the contents of a potion (Potion, Splash Potion, Lingering Potion), or potion applied to an item (Tipped Arrow)
 - Can be applied by eating an item with the [`minecraft:consumable` component](#minecraftconsumable)
@@ -369,6 +356,16 @@ See above for a list of entity variant components.
     - e.g. `potion_contents="invisibility"`
 - On Potion or Tipped Arrow items, has an implicit default value of: `{}`
 - Can be modified with the `set_potion` loot function
+- Transferred from a spawning Lingering Potion to a spawned Area Effect Cloud
+
+### `minecraft:potion_duration_scale` <Badge text="Since 1.22?" variant="tip" />
+
+- When present, for items that have the [`minecraft:potion_contents` component](#minecraftpotion_contents), the duration of the applied effects will be scaled by this factor
+- This also applies to `custom_effects` in the [`minecraft:potion_contents` component](#minecraftpotion_contents), unlike the previous hardcoded scaling factor
+- If not specified, defaults to `1.0`
+- Format: non-negative float
+- e.g. `potion_duration_scale=0.25`
+- Transferred from a spawning Lingering Potion to a spawned Area Effect Cloud
 
 ### `minecraft:writable_book_content`
 
@@ -400,14 +397,14 @@ See above for a list of entity variant components.
   - e.g. `written_book_content={pages:['"Hello world!"'],title:{raw:'"A delightful read"'},author:'Herobrine',generation:1,resolved:true}`
 - Can be modified with the `set_written_book_pages` and `set_book_cover` loot functions
 
-### `minecraft:trim`
+### `minecraft:trim` <Badge text="Changed in 1.22?" variant="caution" />
 
 - Holds the trims applied to an item
 - Format: object with fields
   - `pattern`: pattern id (or inline pattern)
   - `material`: material id (or inline material)
-  - `show_in_tooltip`: boolean (default: `true`)
   - e.g. `trim={pattern:'minecraft:silence',material:'minecraft:redstone'}`
+- To modify the tooltip, see [`minecraft:tooltip_display`](#minecrafttooltip_display)
 
 ### `minecraft:suspicious_stew`
 
@@ -418,12 +415,6 @@ See above for a list of entity variant components.
   - e.g. `suspicious_stew=[{id:'minecraft:poison'}]`
 - On Suspicious Stew, has an implicit default value of: `[]`
 - Can be modified with the `set_stew_effect` loot function
-
-### `minecraft:hide_additional_tooltip`
-
-- If present, disables 'additional' tooltip part which comes from the item type
-- Format: empty object
-  - e.g. `hide_additional_tooltip={}`
 
 ### `minecraft:debug_stick_state`
 
@@ -689,12 +680,6 @@ See above for a list of entity variant components.
 
 - Vanilla tool items will have an implicit default value based on their tier and tool type
 
-### `minecraft:hide_tooltip`
-
-- If present, it will completely hide whole item tooltip (that includes item name)
-- Tooltip will still be visible and searchable in creative mode
-- Format: empty object
-
 ### `minecraft:item_name` <Badge text="Changed in 1.21.2" variant="caution" />
 
 - Always present on every item
@@ -739,15 +724,13 @@ See above for a list of entity variant components.
   - e.g. `ominous_bottle_amplifier=3`
 - Can be modified with the `set_ominous_bottle_amplifier` loot function
 
-### `minecraft:jukebox_playable` <Badge text="Since 1.21" variant="tip" />
+### `minecraft:jukebox_playable` <Badge text="Since 1.21" variant="tip" /> <Badge text="Changed in 1.22?" variant="caution" />
 
 - If set, the item can be inserted into Jukeboxes to play a song
-- Format: object with fields
-  - `song`: Jukebox song id
-    - The song that will be played by the Jukebox when this item stack is inserted
-  - `show_in_tooltip`: boolean (default: true)
-    - If false, the name of the song will not be shown in the tooltip
-  - e.g. `jukebox_playable={song:'minecraft:precipice'}, jukebox_playable={song:'minecraft:precipice', show_in_tooltip:false}`
+- Format: [Jukebox song id](https://minecraft.wiki/w/Jukebox_song_definition)
+  - The song that will be played by the Jukebox when this item stack is inserted
+  - e.g. `jukebox_playable='minecraft:precipice'`, `jukebox_playable:'minecraft:otherside'`
+- To modify the tooltip, see [`minecraft:tooltip_display`](#minecrafttooltip_display)
 
 ### `minecraft:consumable` <Badge text="Since 1.21.2" variant="tip" />
 
@@ -890,14 +873,79 @@ See above for a list of entity variant components.
 - Format: object with fields:
   - `item_damage_per_attack`: non-negative integer (default: `1`)
     - The amount to damage the weapon for each attack performed
-  - `can_disable_blocking`: boolean (default: `false`)
-    - If true, will disable a blocking Shield on successful attack
+  - `disable_blocking_for_seconds`: non-negative float (default: `0`)
+    - If non-zero, will disable a blocking Shield on successful attack for the specified amount of seconds
   - e.g. `weapon={damage_per_attack:2}`
 
-### `minecraft:potion_duration_scale` <Badge text="Since 1.22?" variant="tip" />
+### `minecraft:blocks_attacks` <Badge text="Since 1.22?" variant="tip" />
 
-- When present, for items that have the [`minecraft:potion_contents` component](#minecraftpotion_contents), the duration of the applied effects will be scaled by this factor
-- This also applies to `custom_effects` in the [`minecraft:potion_contents` component](#minecraftpotion_contents), unlike the previous hardcoded scaling factor
-- If not specified, defaults to `1.0`
-- Format: non-negative float
-- e.g. `potion_duration_scale=0.25`
+- When present, this item can be used like a Shield to block attacks to the holding player
+- Format: object with fields:
+  - `block_sound`: sound event (optional)
+    - If specified, this sound will be played when an attack is successfully blocked
+  - `disable_sound`: sound event (optional)
+    - If specified, this sound will be played when the item goes on its disabled cooldown due to an attack
+  - `block_delay_seconds`: non-negative float (default: `0`)
+    - The number of seconds that right-click must be held before successfully blocking attacks
+  - `disable_cooldown_scale`: non-negative float (default: `1`)
+    - Multiplier applied to the number of seconds that the item will be on cooldown for when attacked by a disabling attack (`disable_blocking_for_seconds` on the [`minecraft:weapon` component](#minecraftweapon))
+    - If `0`, this item can never be disabled by attacks
+  - `damage_reductions`: list of object with fields (optional)
+    - Controls how much damage should be blocked in a given attack
+    - If not specified, all damage is blocked
+    - Each entry in the list contributes an amount of damage to be blocked, optionally filtered by damage type
+    - Each entry adds to blocked damage, determined by `clamp(base + factor * dealt_damage, 0, dealt_damage)`
+    - The final damage applied in the attack to the entity is determined by `dealt_damage - clamp(blocked_damage, 0, dealt_damage)`
+    - Entry format:
+      - `type`: damage type id, list of damage type ids, or hash-prefixed damage type tag (optional)
+        - This entry will only contribute to the blocked damage if the dealt damage type matches this field
+        - If not specified, any damage type will be accepted
+      - `base`: float
+        - Constant amount of damage to be blocked
+      - `factor`: float
+        - Fraction of the dealt damage that should be blocked
+      - `item_damage`: object with fields (optional)
+        - Controls how much damage should be applied to the item from a given attack
+        - If not specified, a point of durability is removed for every point of damage dealt
+        - The final damage applied to the item is determined by: `floor(base + factor * dealt_damage)`
+        - The final value may be negative, causing the item to be repaired
+        - Format:
+          - `threshold`: non-negative float
+            - The minimum amount of damage dealt by the attack before item damage is applied to the item
+          - `base`: float
+            - Constant amount of damage applied to the item, if `threshold` is passed
+          - `factor`: float
+            - Fraction of the dealt damage that should be applied to the item, if `threshold` is passed
+
+### `minecraft:break_sound` <Badge text="Since 1.22?" variant="tip" />
+
+- When present, this sound will be played when the item runs out of durability and breaks
+- If not present, no sound will be played on break
+- This component is present by default on every item type
+- Format: sound event
+  - e.g. `break_sound='item.wolf_armor.break'`
+
+### `minecraft:provides_banner_patterns` <Badge text="Since 1.22?" variant="tip" />
+
+- When present, this item can be placed in the pattern slot of a Loom
+- Format: hash-prefixed banner pattern tag
+  - e.g. `provides_banner_patterns='#minecraft:pattern_item/globe'`
+
+### `minecraft:provides_trim_material` <Badge text="Since 1.22?" variant="tip" />
+
+- When present, this item will provide the specified trim material when used in a trimming recipe
+- Note that to be used in the built-in smithing recipes, the item must also be in the `#trim_material` tag
+- As such, the trim material registry definition no longer specifies an item
+- Format: trim material id
+  - e.g. `provides_trim_material='minecraft:iron'`
+
+### `minecraft:tooltip_display` <Badge text="Since 1.22?" variant="tip" />
+
+- This component allows the tooltips provided specifically by any given item component to be suppressed
+- This replaces the previous `show_in_tooltip` fields, `hide_additional_tooltip` and `hide_tooltip` components
+- Format: object with fields:
+  - `hide_tooltip`: boolean (default: `false`)
+    - If true, the item will have no tooltip when hovered
+  - `hidden_components`: list of item component ids (default: ~)
+    - The tooltips provided by any component in this list will be hidden
+    - If that component provides no tooltip, it will have no effect
