@@ -27,6 +27,8 @@ Content on this page is largely pulled from the official Minecraft patch notes, 
   - e.g. `/give @s wooden_pickaxe[damage=-34]` is not valid
 - The previous NBT syntax (`{...}`) has been removed, and replaced with `custom_data` assignment
   - e.g. `/give @s stick{foo:'bar'}` becomes `/give @s stick[custom_data={foo:'bar'}]`
+- Many items have default implicit components. If you wish to remove these, add a bang (`!`) followed by the name of the component you wish to remove:
+  - e.g. `/give @s minecraft:bread[!minecraft:consumable]` will give you bread lacking the [`minecraft:consumable` component](#minecraftconsumable), so it cannot be eaten
 
 ## Components on block entities
 
@@ -88,7 +90,7 @@ Example: crafting an enchanted potato
 ### List of entity variant components
 
 - `villager/variant`: one of `desert`, `jungle`, `plains`, `savanna`, `snow`, `swamp`, or `taiga`
-- `wolf/variant`: namespaced id from `wolf_variant` registry
+- `wolf/variant`: namespaced id from the [`wolf_variant` registry](https://minecraft.wiki/w/Wolf#Variants)
 - `wolf/collar`: one of 16 dye colors
 - `fox/variant`: `red` or `snow`
 - `salmon/size`: one of `small`, `medium`, or `large`
@@ -98,13 +100,13 @@ Example: crafting an enchanted potato
 - `tropical_fish/pattern_color`: one of 16 dye colors
 - `mooshroom/variant`: `red` or `brown`
 - `rabbit/variant`: one of `brown`, `white`, `black`, `white_splotched`, `gold`, `salt`, or `evil`
-- `pig/variant`: namespaced id from `pig_variant` registry
-- `frog/variant`: namespaced id from `frog_variant` registry
+- `pig/variant`: namespaced id from the [`pig_variant` registry](https://minecraft.wiki/w/Pig#Variants)
+- `frog/variant`: namespaced id from the [`frog_variant` registry](https://minecraft.wiki/w/Frog#Spawning)
 - `horse/variant`: one of `white`, `creamy`, `chestnut`, `brown`, `black`, `gray`, or `dark_brown`
 - `painting/variant`: namespaced id from `painting_variant` registry
 - `llama/variant`: one of `creamy`, `white`, `brown`, or `gray`
 - `axolotl/variant`: one of `lucy`, `wild`, `gold`, `cyan`, or `blue`
-- `cat/variant`: namespaced id from `cat_variant` registry
+- `cat/variant`: namespaced id from [`cat_variant` registry](https://minecraft.wiki/w/Cat#Appearance)
 - `cat/collar`: one of 16 dye colors
 - `sheep/color`: one of 16 dye colors
 - `shulker/color`: one of 16 dye colors
@@ -126,6 +128,7 @@ See above for a list of entity variant components.
 ### `minecraft:damage`
 
 - The amount of durability removed from an item
+  - To set the attack damage for an item, see [`minecraft:attribute_modifiers`](#minecraftattribute_modifiers)
 - If removed, the item will not be damageable
 - Format: non-negative integer
   - e.g. `damage=12`
@@ -223,7 +226,7 @@ See above for a list of entity variant components.
 - Holds attribute modifiers applied to any item
 - Format: object with fields (default: `{modifiers:[]}`)
   - `modifiers`: list of attribute modifiers
-    - `type`: attribute id
+    - `type`: an [attribute id](https://minecraft.wiki/w/Attribute#Attributes)
     - `slot`: one of:
       - `any` (default)
       - `hand`: either in main or offhand
@@ -649,6 +652,7 @@ See above for a list of entity variant components.
 
 - Controls the maximum stacking size of this item
 - Values greater than 1 are mutually exclusive with the [`max_damage` component](#minecraftmax_damage)
+  - This means you need to add a negative `!max_damage` component to items that implicitly have one
 - Format: integer between 1 and 99
   - e.g. `max_stack_size=4`
 - Has an implicit default value according to the item type (usually `64`)
@@ -657,6 +661,7 @@ See above for a list of entity variant components.
 
 - Controls the maximum amount of damage than an item can take
 - Mutually exclusive with the [`max_stack_size` component](#minecraftmax_stack_size) greater than 1
+  - This means you need to add a negative `!max_stack_size` component to items that implicitly have one
 - Requires that the [`damage` component](#minecraftdamage) is also present on the item
 - If not present, the item cannot be damaged
 - Format: positive integer
