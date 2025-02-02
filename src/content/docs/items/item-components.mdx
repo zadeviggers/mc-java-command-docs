@@ -881,6 +881,7 @@ See above for a list of entity variant components.
 
 - When present, this item can be used like a Shield to block attacks to the holding player
 - Format: object with fields:
+
   - `block_sound`: sound event (optional)
     - If specified, this sound will be played when an attack is successfully blocked
   - `disable_sound`: sound event (optional)
@@ -890,13 +891,17 @@ See above for a list of entity variant components.
   - `disable_cooldown_scale`: non-negative float (default: `1`)
     - Multiplier applied to the number of seconds that the item will be on cooldown for when attacked by a disabling attack (`disable_blocking_for_seconds` on the [`minecraft:weapon` component](#minecraftweapon))
     - If `0`, this item can never be disabled by attacks
+  - `bypassed_by`: hashtagged damage type tag (optional)
+    - If specified, blocking is bypassed by these damage types
   - `damage_reductions`: list of object with fields (optional)
+
     - Controls how much damage should be blocked in a given attack
     - If not specified, all damage is blocked
     - Each entry in the list contributes an amount of damage to be blocked, optionally filtered by damage type
     - Each entry adds to blocked damage, determined by `clamp(base + factor * dealt_damage, 0, dealt_damage)`
     - The final damage applied in the attack to the entity is determined by `dealt_damage - clamp(blocked_damage, 0, dealt_damage)`
     - Entry format:
+
       - `type`: damage type id, list of damage type ids, or hash-prefixed damage type tag (optional)
         - This entry will only contribute to the blocked damage if the dealt damage type matches this field
         - If not specified, any damage type will be accepted
@@ -904,6 +909,8 @@ See above for a list of entity variant components.
         - Constant amount of damage to be blocked
       - `factor`: float
         - Fraction of the dealt damage that should be blocked
+      - `horizontal_blocking_angle`: angle in degrees as a positive float (default: `90`)
+        - The maximum angle between the user's facing and the incoming attack for the block to be effective
       - `item_damage`: object with fields (optional)
         - Controls how much damage should be applied to the item from a given attack
         - If not specified, a point of durability is removed for every point of damage dealt
