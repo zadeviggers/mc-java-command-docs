@@ -13,6 +13,10 @@ function makeHighlightElement(id: string) {
   };
 }
 
+function clampRGB(num: number) {
+  return Math.min(Math.max(0, num), 255);
+}
+
 const hexParserRegex = /^#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/;
 
 const percentParserRegex =
@@ -51,7 +55,7 @@ export function ColourConverter({
 
   function makeOnRGBChange(channel: "Red" | "Green" | "Blue") {
     return (e: ChangeEvent<HTMLInputElement>) => {
-      const value = Number(e.target.value);
+      const value = clampRGB(Number(e.target.value));
       if (channel === "Red") {
         setRGB((old) => [value, old[1], old[2]]);
       } else if (channel === "Green") {
@@ -74,6 +78,7 @@ export function ColourConverter({
 
     const parsedRGBValues = hexValues
       .map((v) => parseInt(v, 16))
+      .map(clampRGB)
       .filter((n) => Number.isInteger(n));
 
     if (parsedRGBValues.length !== 3) return;
@@ -92,6 +97,7 @@ export function ColourConverter({
 
     const parsedRGBValues = percentValues
       .map((v) => Math.floor(Number(v) * 255))
+      .map(clampRGB)
       .filter((n) => Number.isInteger(n));
 
     if (parsedRGBValues.length !== 3) return;
@@ -106,7 +112,7 @@ export function ColourConverter({
     const parsedG = (value >> 8) & 0xff;
     const parsedB = value & 0xff;
 
-    setRGB([parsedR, parsedG, parsedB]);
+    setRGB([parsedR, parsedG, parsedB].map(clampRGB) as RGBArray);
   }
 
   function openColourPicker() {
