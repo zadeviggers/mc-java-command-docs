@@ -138,7 +138,7 @@ export function ColourConverter({
                   onChange={makeOnRGBChange(c)}
                 />
                 <input
-                  className="rounded-sm overflow-hidden"
+                  className="rounded-sm  bg-gray-600 text-white"
                   type="number"
                   min={0}
                   max={255}
@@ -154,9 +154,9 @@ export function ColourConverter({
           {/* Text-based Controls */}
           <label htmlFor="RGB-hex-field">
             Hex code
-            <div className="flex">
+            <div className="flex rounded-sm overflow-hidden">
               <input
-                className="block rounded-sm overflow-hidden"
+                className="block bg-gray-600 text-white"
                 type="text"
                 pattern="^#?[0-9a-fA-F]{6}$"
                 id="RGB-hex-field"
@@ -171,7 +171,7 @@ export function ColourConverter({
             Packed integer
             <div className="flex rounded-sm overflow-hidden">
               <input
-                className="block"
+                className="block bg-gray-600 text-white"
                 type="text"
                 pattern="\d+"
                 id="RGB-packed-int-field"
@@ -186,7 +186,7 @@ export function ColourConverter({
             RGB percent array
             <div className="flex rounded-sm overflow-hidden">
               <input
-                className="block"
+                className="block bg-gray-600 text-white"
                 type="text"
                 pattern="^\[([0-9.],?){3}\]$"
                 id="RGB-packed-array-field"
