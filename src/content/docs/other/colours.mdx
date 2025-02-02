@@ -6,7 +6,7 @@ import { ColourConverter } from "../../../components/ColourConverter.tsx";
 
 ## RGB Colours
 
-Minecraft has several ways of specifying colours. The [16 core colours](#16-core-colours) are often the easiest way, but usually only available for things colourable in normal gameplay. Most technical systems require the use of one of several RGB formats, such as [packed integers](#packed-integer-format), [percentage arrays](#array-format), or the well-known Hex Colours.
+Minecraft has several ways of specifying colours. The [16 core colours](#16-core-colours) are often the easiest way, but usually only available for things colourable in normal gameplay. Most technical systems require the use of one of several RGB formats, such as [packed integers](#packed-integer-format), [channel percentage arrays](#channel-percentages-array-format), or the well-known Hex Colours.
 
 ### Minecraft RGB Colour format converter
 
@@ -30,11 +30,11 @@ Packed_Integer = (R << 16) | (G << 8) | B;
 | Red        | (255, 0, 0)   | #FF0000  | 16711680       |
 | Green      | (0, 255, 0)   | #00FF00  | 65280          |
 | Blue       | (0, 0, 255)   | #0000FF  | 255            |
-| Purple     | (255, 0, 255) | #FF00FF  | 16711935       |
+| Pink       | (255, 0, 255) | #FF00FF  | 16711935       |
 
 A colour converter tool is available above to make using these colours easier.
 
-### Array format
+### Channel percentages (array) format
 
 <ColourConverter client:visible defaultOpen={false} />
 

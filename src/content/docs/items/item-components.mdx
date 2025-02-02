@@ -176,10 +176,10 @@ Most components add new functionality, but some replicate functionality that was
 
 - Represents a color applied to a dyeable item (in the `#minecraft:dyeable` item tag)
 - Format: object with fields
-  - `rgb`: integer, RGB value
+  - `rgb`: [integer, RGB value](/other/colours/#packed-integer-format)
   - `show_in_tooltip`: boolean (default: `true`)
   - e.g. `dyed_color={rgb:16711680}`
-  - Alternatively, can be defined as an inline integer RGB value
+  - Alternatively, can be defined as an inline [integer RGB value](/other/colours/#packed-integer-format)
     - e.g. `dyed_color=16711680`
 
 ### `minecraft:attribute_modifiers`
@@ -242,7 +242,7 @@ Most components add new functionality, but some replicate functionality that was
 ### `minecraft:map_color`
 
 - Represents the tint of the decorations on the Filled Map item
-- Format: integer, RGB value
+- Format: [integer, RGB value](/other/colours/#packed-integer-format)
   - e.g. `map_color=16711680`
 - On Filled Maps, has an implicit default value of: `4603950`
 
@@ -317,7 +317,7 @@ Most components add new functionality, but some replicate functionality that was
   - `potion`: potion id (optional)
     - The potion type in this item: the item will inherit all effects from this
     - A list of IDs is available at the bottom of the item data section of the [potions wiki page](https://minecraft.wiki/w/Potion#Item_data)
-  - `custom_color`: integer, RGB value (optional)
+  - `custom_color`: [integer, RGB value](/other/colours/#packed-integer-format) (optional)
     - Overrides the visual color of the potion
   - `custom_effects`: list of effect instances (default: `[]`)
     - Additional list of custom effects that this item should apply, that may not be representable by an existing potion
@@ -444,9 +444,9 @@ Most components add new functionality, but some replicate functionality that was
     - `star`
     - `creeper`
     - `burst`
-  - `colors`: integer array, RGB values (default: `[]`)
+  - `colors`: integer array, [RGB values](/other/colours/#packed-integer-format) (default: `[]`)
     - List of initial particle colors, randomly selected from
-  - `fade_colors`: integer array, RGB values (default: `[]`)
+  - `fade_colors`: integer array, [RGB values](/other/colours/#packed-integer-format) (default: `[]`)
     - List of particle colors to fade to, randomly selected from
   - `has_trail`: boolean (default: `false`)
   - `has_twinkle`: boolean (default: `false`)
