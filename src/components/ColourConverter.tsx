@@ -176,6 +176,7 @@ export function ColourConverter({
                 pattern="^#?[0-9a-fA-F]{6}$"
                 id="RGB-hex-field"
                 onFocus={makeHighlightElement("RGB-hex-field")}
+                onClick={makeHighlightElement("RGB-hex-field")}
                 value={hexCode}
                 onChange={onHexChange}
               />
@@ -191,6 +192,7 @@ export function ColourConverter({
                 pattern="\d+"
                 id="RGB-packed-int-field"
                 onFocus={makeHighlightElement("RGB-packed-int-field")}
+                onClick={makeHighlightElement("RGB-packed-int-field")}
                 value={packedInteger}
                 onChange={onPackedIntChange}
               />
@@ -204,8 +206,9 @@ export function ColourConverter({
                 className="block bg-gray-600 text-white"
                 type="text"
                 pattern="^\[([0-9.],?){3}\]$"
-                id="RGB-packed-array-field"
-                onFocus={makeHighlightElement("RGB-packed-array-field")}
+                id="RGB-array-field"
+                onFocus={makeHighlightElement("RGB-array-field")}
+                onClick={makeHighlightElement("RGB-array-field")}
                 value={RGBPercentArray}
                 onChange={onRGBPercentChange}
               />
