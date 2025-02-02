@@ -1,4 +1,4 @@
-import { useState, useMemo, type ChangeEvent } from "react";
+import { useState, useMemo, type ChangeEvent, useRef } from "react";
 import { CopyButton } from "./CopyButton";
 
 type RGBArray = [number, number, number];
@@ -22,6 +22,7 @@ export function ColourConverter({
   defaultColour = [255, 0, 0],
   defaultOpen = true,
 }: ColourConverterProps) {
+  const colourPicker = useRef<HTMLInputElement | null>(null);
   const [RGB, setRGB] = useState<RGBArray>(defaultColour);
 
   const packedInteger = useMemo(
@@ -108,17 +109,31 @@ export function ColourConverter({
     setRGB([parsedR, parsedG, parsedB]);
   }
 
+  function openColourPicker() {
+    colourPicker.current?.click();
+  }
+
   return (
     <details open={defaultOpen} className="flex flex-col flex-wrap">
+      <input
+        type="color"
+        id="RGB-hidden-picker"
+        className="hidden"
+        onChange={onHexChange}
+        value={hexCode}
+        ref={colourPicker}
+      />
       <summary className="text-red-50">Colour format converter</summary>
       <div className="flex flex-col gap-4 lg:flex-row lg:h-56">
         {/* Main stack */}
-        <div
-          className="flex-1 min-h-10 lg:hidden rounded-lg"
+        <button
+          title="Click to open system colour picker"
+          onClick={openColourPicker}
+          className="cursor-pointer block flex-1 min-h-10 lg:hidden rounded-lg"
           style={{ backgroundColor: `rgb(${RGB.join(", ")})` }}
         >
           {/* Secondary Colour indicator for mobile */}
-        </div>
+        </button>
         <div className="flex-2 flex flex-col">
           {/* RGB Controls */}
           {(["Red", "Green", "Blue"] as const).map((c, i) => (
@@ -198,12 +213,14 @@ export function ColourConverter({
             </div>
           </label>
         </div>
-        <div
-          className="flex-1 min-h-10 rounded-lg"
+        <button
+          title="Click to open system colour picker"
+          onClick={openColourPicker}
+          className="cursor-pointer block flex-1 min-h-10 rounded-lg"
           style={{ backgroundColor: `rgb(${RGB.join(", ")})` }}
         >
           {/* Main colour indicator */}
-        </div>
+        </button>
       </div>
     </details>
   );
