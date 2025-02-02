@@ -13,6 +13,11 @@ function makeHighlightElement(id: string) {
   };
 }
 
+const hexParserRegex = /^#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/;
+
+const percentParserRegex =
+  /^\[\s*((?:1|0)(?:.\d+)?)\s*,\s*((?:1|0)(?:.\d+)?)\s*,\s*((?:1|0)(?:.\d+)?)\s*\]$/;
+
 export function ColourConverter({
   defaultColour = [255, 0, 0],
   defaultOpen = true,
@@ -56,17 +61,60 @@ export function ColourConverter({
       }
     };
   }
-  function onHexChange() {}
-  function onRGBPercentChange() {}
-  function onPackedIntChange() {}
+  function onHexChange(e: ChangeEvent<HTMLInputElement>) {
+    const value = e.target.value.trim().toLowerCase();
+    if (value.length === 0) return;
+
+    const match = value.match(hexParserRegex);
+
+    if (!match) return;
+
+    const [, ...hexValues] = match;
+
+    const parsedRGBValues = hexValues
+      .map((v) => parseInt(v, 16))
+      .filter((n) => Number.isInteger(n));
+
+    if (parsedRGBValues.length !== 3) return;
+
+    setRGB(parsedRGBValues as RGBArray);
+  }
+  function onRGBPercentChange(e: ChangeEvent<HTMLInputElement>) {
+    const value = e.target.value.trim();
+    if (value.length === 0) return;
+
+    const match = value.match(percentParserRegex);
+
+    if (!match) return;
+
+    const [, ...percentValues] = match;
+
+    const parsedRGBValues = percentValues
+      .map((v) => Math.floor(Number(v) * 255))
+      .filter((n) => Number.isInteger(n));
+
+    if (parsedRGBValues.length !== 3) return;
+
+    setRGB(parsedRGBValues as RGBArray);
+  }
+  function onPackedIntChange(e: ChangeEvent<HTMLInputElement>) {
+    const value = Number(e.target.value.trim());
+    if (!Number.isInteger(value)) return;
+
+    const parsedR = (value >> 16) & 0xff;
+    const parsedG = (value >> 8) & 0xff;
+    const parsedB = value & 0xff;
+
+    setRGB([parsedR, parsedG, parsedB]);
+  }
 
   return (
     <details open={defaultOpen} className="flex flex-col flex-wrap">
       <summary className="text-red-50">Colour converter</summary>
-      <div className="flex flex-col gap-4 md:flex-row md:h-56">
+      <div className="flex flex-col gap-4 lg:flex-row lg:h-56">
         {/* Main stack */}
         <div
-          className="flex-1 md:hidden"
+          className="flex-1 min-h-10 lg:hidden rounded-lg"
           style={{ backgroundColor: `rgb(${RGB.join(", ")})` }}
         >
           {/* Secondary Colour indicator for mobile */}
@@ -110,9 +158,9 @@ export function ColourConverter({
               <input
                 className="block rounded-sm overflow-hidden"
                 type="text"
-                pattern="^#[0-9a-fA-F]{6}$"
+                pattern="^#?[0-9a-fA-F]{6}$"
                 id="RGB-hex-field"
-                onClick={makeHighlightElement("RGB-hex-field")}
+                onFocus={makeHighlightElement("RGB-hex-field")}
                 value={hexCode}
                 onChange={onHexChange}
               />
@@ -127,7 +175,7 @@ export function ColourConverter({
                 type="text"
                 pattern="\d+"
                 id="RGB-packed-int-field"
-                onClick={makeHighlightElement("RGB-packed-int-field")}
+                onFocus={makeHighlightElement("RGB-packed-int-field")}
                 value={packedInteger}
                 onChange={onPackedIntChange}
               />
@@ -140,9 +188,9 @@ export function ColourConverter({
               <input
                 className="block"
                 type="text"
-                pattern="^\[\s*((?:1|0)(?:.\d+)?)\s*,\s*((?:1|0)(?:.\d+)?)\s*,\s*((?:1|0)(?:.\d+)?)\s*\]$"
+                pattern="^\[([0-9.],?){3}\]$"
                 id="RGB-packed-array-field"
-                onClick={makeHighlightElement("RGB-packed-array-field")}
+                onFocus={makeHighlightElement("RGB-packed-array-field")}
                 value={RGBPercentArray}
                 onChange={onRGBPercentChange}
               />
@@ -151,9 +199,11 @@ export function ColourConverter({
           </label>
         </div>
         <div
-          className="flex-1"
+          className="flex-1 min-h-10 rounded-lg"
           style={{ backgroundColor: `rgb(${RGB.join(", ")})` }}
-        ></div>
+        >
+          {/* Main colour indicator */}
+        </div>
       </div>
     </details>
   );
