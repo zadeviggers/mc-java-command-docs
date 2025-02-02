@@ -1,10 +1,13 @@
 // @ts-check
 import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
+import react from "@astrojs/react";
+import tailwind from "@astrojs/tailwind";
 
 // https://astro.build/config
 export default defineConfig({
   site: "https://mcdocs.zade.viggers.net/",
+
   integrations: [
     starlight({
       title: "Java Edition Reference Docs",
@@ -26,7 +29,9 @@ export default defineConfig({
       ],
       lastUpdated: true,
       credits: true,
-      customCss: ["./src/theme.css"],
+      customCss: ["./src/main.css"],
     }),
+    react(),
+    tailwind({ applyBaseStyles: false }),
   ],
 });
