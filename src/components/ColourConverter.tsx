@@ -110,7 +110,7 @@ export function ColourConverter({
 
   return (
     <details open={defaultOpen} className="flex flex-col flex-wrap">
-      <summary className="text-red-50">Colour converter</summary>
+      <summary className="text-red-50">Colour format converter</summary>
       <div className="flex flex-col gap-4 lg:flex-row lg:h-56">
         {/* Main stack */}
         <div
