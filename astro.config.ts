@@ -11,6 +11,8 @@ export default defineConfig({
   integrations: [
     starlight({
       title: "Java Edition Reference Docs",
+      description:
+        "Unofficial docs for Minecraft: Java Edition, with information about item components, item model formats, and colour systems",
       social: {
         github: "https://github.com/zadeviggers/mc-java-command-docs",
       },
