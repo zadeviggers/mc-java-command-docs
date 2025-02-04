@@ -75,7 +75,9 @@ Example: crafting an enchanted potato
 }
 ```
 
-## Entity variant components <Badge text="Since 1.22?" variant="tip" size="large" />
+## Component types
+
+### Entity variant components <Badge text="Since 1.22?" variant="caution" />
 
 - Entities have a set of components for configuring variants and other aspects of appearance
 - If those components are present on spawning item (like spawn eggs, mob buckets, `minecraft:painting`, `minecraft:item_frame`), they will be applied to new entity
@@ -86,8 +88,6 @@ Example: crafting an enchanted potato
   Components are currently not restored when spawn egg is picked from existing
   entity
 </Aside>
-
-### List of entity variant components <Badge text="Changed in 1.22?" variant="caution" />
 
 - `villager/variant`: one of `desert`, `jungle`, `plains`, `savanna`, `snow`, `swamp`, or `taiga`
 - `wolf/variant`: namespaced id from the [`wolf_variant` registry](https://minecraft.wiki/w/Wolf#Variants)
@@ -110,10 +110,6 @@ Example: crafting an enchanted potato
 - `cat/collar`: one of 16 dye colors
 - `sheep/color`: one of 16 dye colors
 - `shulker/color`: one of 16 dye colors
-
-## Component types
-
-See above for a list of entity variant components.
 
 ### `minecraft:custom_data`
 
@@ -861,9 +857,10 @@ See above for a list of entity variant components.
 - Format: object with fields:
   - `item_damage_per_attack`: non-negative integer (default: `1`)
     - The amount to damage the weapon for each attack performed
+    - To set the attack damage for an item, instead see [`minecraft:attribute_modifiers`](#minecraftattribute_modifiers)
   - `disable_blocking_for_seconds`: non-negative float (default: `0`)
     - If non-zero, will disable a blocking Shield on successful attack for the specified amount of seconds
-  - e.g. `weapon={damage_per_attack:2}`
+  - e.g. `weapon={item_damage_per_attack:2}`
 
 ### `minecraft:blocks_attacks` <Badge text="Since 1.22?" variant="tip" />
 
@@ -944,4 +941,3 @@ See above for a list of entity variant components.
   - `hidden_components`: list of item component ids (default: ~)
     - The tooltips provided by any component in this list will be hidden
     - If that component provides no tooltip, it will have no effect
-
