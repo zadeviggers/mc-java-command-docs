@@ -91,6 +91,7 @@ Example: crafting an enchanted potato
 
 - `villager/variant`: one of `desert`, `jungle`, `plains`, `savanna`, `snow`, `swamp`, or `taiga`
 - `wolf/variant`: namespaced id from the [`wolf_variant` registry](https://minecraft.wiki/w/Wolf#Variants)
+- `wolf/sound_variant`: namespaced id from [`wolf_sound_variant` registry](https://minecraft.wiki/w/Wolf#Sound_variants_2)
 - `wolf/collar`: one of [16 dye colors](/other/colours/#16-core-colours)
 - `cat/variant`: namespaced id from [`cat_variant` registry](https://minecraft.wiki/w/Cat#Appearance)
 - `cat/collar`: one of [16 dye colors](/other/colours/#16-core-colours)
@@ -898,6 +899,7 @@ Example: crafting an enchanted potato
         - Fraction of the dealt damage that should be blocked
       - `horizontal_blocking_angle`: angle in degrees as a positive float (default: `90`)
         - The maximum angle between the user's facing and the incoming attack for the block to be effective
+        - If the blocked damage has no position, the compared angle will be assumed to be the maximum `180`
       - `item_damage`: object with fields (optional)
         - Controls how much damage should be applied to the item from a given attack
         - If not specified, a point of durability is removed for every point of damage dealt
