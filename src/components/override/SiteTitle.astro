@@ -1,18 +1,12 @@
 ---
-import { Badge } from "@astrojs/starlight/components";
+import VersionBadge from "../VersionBadge.astro";
 
 const { siteTitle, siteTitleHref } = Astro.props;
-const minecraftVersion = "1.22?";
-const datapackVersion = "66";
 ---
 
 <div class="title-wrapper sl-flex">
   <a href={siteTitleHref} class="site-title">{siteTitle}</a>
-  <Badge
-    text={`MC:JE ${minecraftVersion} | DP ${datapackVersion}`}
-    variant="success"
-    class="update-label"
-  />
+  <VersionBadge class="update-label" />
 </div>
 
 <style>
@@ -27,7 +21,7 @@ const datapackVersion = "66";
     text-decoration: none;
     white-space: nowrap;
   }
-  @media screen and (max-width: 660px) {
+  @media (max-width: 50rem) {
     .update-label {
       display: none;
     }

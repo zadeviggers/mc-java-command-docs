@@ -1,0 +1,19 @@
+---
+import { Badge } from "@astrojs/starlight/components";
+
+export interface Props {
+  short?: boolean;
+}
+
+const { short = true } = Astro.props;
+
+const minecraftVersion = "1.22?";
+const datapackVersion = "68";
+const resourcePackVersion = "53";
+---
+
+<Badge
+  text={`MC:JE ${minecraftVersion} | ${short ? "DP" : "Data Pack"} ${datapackVersion} | ${short ? "RP" : "Resource Pack"} ${resourcePackVersion}`}
+  variant="success"
+  {...Astro.props}
+/>
