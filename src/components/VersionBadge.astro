@@ -3,9 +3,10 @@ import { Badge } from "@astrojs/starlight/components";
 
 export interface Props {
   short?: boolean;
+  class?: string;
 }
 
-const { short = true } = Astro.props;
+const { short = true, class: className } = Astro.props;
 
 const minecraftVersion = "1.22?";
 const datapackVersion = "68";
@@ -13,6 +14,7 @@ const resourcePackVersion = "53";
 ---
 
 <Badge
+  class={className}
   text={`MC:JE ${minecraftVersion} | ${short ? "DP" : "Data Pack"} ${datapackVersion} | ${short ? "RP" : "Resource Pack"} ${resourcePackVersion}`}
   variant="success"
   {...Astro.props}

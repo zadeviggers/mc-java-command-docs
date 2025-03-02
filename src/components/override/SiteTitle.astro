@@ -22,7 +22,7 @@ const { siteTitle, siteTitleHref } = Astro.props;
     white-space: nowrap;
   }
   @media (max-width: 50rem) {
-    .update-label {
+    :global(.update-label) {
       display: none;
     }
   }
