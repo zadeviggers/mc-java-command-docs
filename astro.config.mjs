@@ -13,7 +13,7 @@ export default defineConfig({
       },
       components: {
         SiteTitle: "./src/components/override/SiteTitle.astro",
-        MobileMenuFooter: "./src/components/override/MobileMenuFooter.astro",
+        // MobileMenuFooter: "./src/components/override/MobileMenuFooter.astro",
       },
       sidebar: [
         {
