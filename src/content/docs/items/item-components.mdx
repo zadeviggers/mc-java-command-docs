@@ -77,7 +77,7 @@ Example: crafting an enchanted potato
 
 ## Component types
 
-### Entity variant components <Badge text="Since 1.22?" variant="caution" />
+### Entity variant components <Badge text="Since 1.21.5" variant="caution" />
 
 - Entities have a set of components for configuring variants and other aspects of appearance
 - If those components are present on spawning item (like spawn eggs, mob buckets, `minecraft:painting`, `minecraft:item_frame`), they will be applied to new entity
@@ -117,6 +117,8 @@ Example: crafting an enchanted potato
 ### `minecraft:custom_data`
 
 - Can be used for custom data storage on an item
+- <Badge text="Since 1.21.5" variant="tip" size="small" /> Can also be applied to
+  entities under the `data` attribute to store data on them{" "}
 - When upgrading a world, any non-game data in the item `tag` will be moved into here
 - Format: object with any fields
   - e.g. `custom_data={some:'data'}`
@@ -141,14 +143,14 @@ Example: crafting an enchanted potato
   - e.g. `repair_cost=12`
 - If not set, has an implicit default value of: `0`
 
-### `minecraft:unbreakable` <Badge text="Changed in 1.22?" variant="caution" />
+### `minecraft:unbreakable` <Badge text="Changed in 1.21.5" variant="caution" />
 
 - If set, the item will not lose any durability when used
 - Format: empty object
   - e.g. `unbreakable={}`
 - To modify the tooltip, see [`minecraft:tooltip_display`](#minecrafttooltip_display)
 
-### `minecraft:enchantments` <Badge text="Changed in 1.22?" variant="caution" />
+### `minecraft:enchantments` <Badge text="Changed in 1.21.5" variant="caution" />
 
 - Stores a list of enchantments and their levels on an item
 - Format: object of enchantment (id string) to level (integer `0-255`)
@@ -156,7 +158,7 @@ Example: crafting an enchanted potato
 - Can be modified with the `set_enchantments`, `enchant_randomly`, and `enchant_with_levels` loot functions
 - To modify the tooltip, see [`minecraft:tooltip_display`](#minecrafttooltip_display)
 
-### `minecraft:stored_enchantments` <Badge text="Changed in 1.22?" variant="caution" />
+### `minecraft:stored_enchantments` <Badge text="Changed in 1.21.5" variant="caution" />
 
 - Stores list of enchantments and their levels for an Enchanted Book
 - Unlike `minecraft:enchantments`, the effects provided by enchantments do not apply from this component
@@ -165,7 +167,7 @@ Example: crafting an enchanted potato
 - On Enchanted Books, has an implicit default value of: `{levels:{}}`
 - To modify the tooltip, see [`minecraft:tooltip_display`](#minecrafttooltip_display)
 
-### `minecraft:custom_name` <Badge text="Changed in 1.22?" variant="caution" />
+### `minecraft:custom_name` <Badge text="Changed in 1.21.5" variant="caution" />
 
 - Custom name override for an item (as set by renaming with an Anvil)
 - Format: JSON chat component string
@@ -181,7 +183,7 @@ Example: crafting an enchanted potato
 - If not set, has an implicit default value of: `[]`
 - Can be modified with the `set_lore` loot function
 
-### `minecraft:can_break` <Badge text="Changed in 1.22?" variant="caution" />
+### `minecraft:can_break` <Badge text="Changed in 1.21.5" variant="caution" />
 
 - Controls which blocks a player in Adventure mode can break with this item
   - These were previously stored as flat strings, but now use the more flexible block predicate format already used in loot tables and advancements
@@ -193,7 +195,7 @@ Example: crafting an enchanted potato
   - e.g. `can_break={blocks:'minecraft:stone'}`
 - To modify the tooltip, see [`minecraft:tooltip_display`](#minecrafttooltip_display)
 
-### `minecraft:can_place_on` <Badge text="Changed in 1.22?" variant="caution" />
+### `minecraft:can_place_on` <Badge text="Changed in 1.21.5" variant="caution" />
 
 - Controls which blocks a player in Adventure mode can place on with this item
 - Format: single block predicate or list of block predicates
@@ -202,7 +204,7 @@ Example: crafting an enchanted potato
   - e.g. `can_place_on={blocks:'minecraft:stone'}` (single element format)
 - To modify the tooltip, see [`minecraft:tooltip_display`](#minecrafttooltip_display)
 
-### `minecraft:dyed_color` <Badge text="Changed in 1.22?" variant="caution" />
+### `minecraft:dyed_color` <Badge text="Changed in 1.21.5" variant="caution" />
 
 - Represents a color applied to a dyeable item (in the `#minecraft:dyeable` item tag)
 - Format: RGB value
@@ -210,7 +212,7 @@ Example: crafting an enchanted potato
   - e.g. `dyed_color=[0.5, 1.0, 0.2]` (array format)
 - To modify the tooltip, see [`minecraft:tooltip_display`](#minecrafttooltip_display)
 
-### `minecraft:attribute_modifiers` <Badge text="Changed in 1.22?" variant="caution" />
+### `minecraft:attribute_modifiers` <Badge text="Changed in 1.21.5" variant="caution" />
 
 - Holds attribute modifiers applied to any item
 - Format: list of attribute modifiers
@@ -334,7 +336,7 @@ Example: crafting an enchanted potato
   - These lists of values are accessed by the various model property getters
 - Can be modified with the `set_custom_model_data` loot function
 
-### `minecraft:potion_contents` <Badge text="Changed in 1.22?" variant="caution" />
+### `minecraft:potion_contents` <Badge text="Changed in 1.21.5" variant="caution" />
 
 - Holds the contents of a potion (Potion, Splash Potion, Lingering Potion), or potion applied to an item (Tipped Arrow)
 - Cam be applied by eating an item with the [`minecraft:consumable` component](#minecraftconsumable)
@@ -356,7 +358,7 @@ Example: crafting an enchanted potato
 - Can be modified with the `set_potion` loot function
 - Transferred from a spawning Lingering Potion to a spawned Area Effect Cloud
 
-### `minecraft:potion_duration_scale` <Badge text="Since 1.22?" variant="tip" />
+### `minecraft:potion_duration_scale` <Badge text="Since 1.21.5" variant="tip" />
 
 - When present, for items that have the [`minecraft:potion_contents` component](#minecraftpotion_contents), the duration of the applied effects will be scaled by this factor
 - This also applies to `custom_effects` in the [`minecraft:potion_contents` component](#minecraftpotion_contents), unlike the previous hardcoded scaling factor
@@ -395,7 +397,7 @@ Example: crafting an enchanted potato
   - e.g. `written_book_content={pages:['"Hello world!"'],title:{raw:'"A delightful read"'},author:'Herobrine',generation:1,resolved:true}`
 - Can be modified with the `set_written_book_pages` and `set_book_cover` loot functions
 
-### `minecraft:trim` <Badge text="Changed in 1.22?" variant="caution" />
+### `minecraft:trim` <Badge text="Changed in 1.21.5" variant="caution" />
 
 - Holds the trims applied to an item
 - Format: object with fields
@@ -715,7 +717,7 @@ Example: crafting an enchanted potato
   - e.g. `ominous_bottle_amplifier=3`
 - Can be modified with the `set_ominous_bottle_amplifier` loot function
 
-### `minecraft:jukebox_playable` <Badge text="Since 1.21" variant="tip" /> <Badge text="Changed in 1.22?" variant="caution" />
+### `minecraft:jukebox_playable` <Badge text="Since 1.21" variant="tip" /> <Badge text="Changed in 1.21.5" variant="caution" />
 
 - If set, the item can be inserted into Jukeboxes to play a song
 - Format: [Jukebox song id](https://minecraft.wiki/w/Jukebox_song_definition)
@@ -853,7 +855,7 @@ Example: crafting an enchanted potato
   - `value`: Positive integer, a higher value allows enchantments with a higher cost to be picked
   - e.g. `enchantable={value:15}`
 
-### `minecraft:weapon` <Badge text="Since 1.22?" variant="tip" />
+### `minecraft:weapon` <Badge text="Since 1.21.5" variant="tip" />
 
 - When present, the 'Item Used' statistic will be incremented for each attack with the item
 - The specified amount of damage can be done to the item with each attack
@@ -865,7 +867,7 @@ Example: crafting an enchanted potato
     - If non-zero, will disable a blocking Shield on successful attack for the specified amount of seconds
   - e.g. `weapon={item_damage_per_attack:2}`
 
-### `minecraft:blocks_attacks` <Badge text="Since 1.22?" variant="tip" />
+### `minecraft:blocks_attacks` <Badge text="Since 1.21.5" variant="tip" />
 
 - When present, this item can be used like a Shield to block attacks to the holding player
 - Format: object with fields:
@@ -913,7 +915,7 @@ Example: crafting an enchanted potato
           - `factor`: float
             - Fraction of the dealt damage that should be applied to the item, if `threshold` is passed
 
-### `minecraft:break_sound` <Badge text="Since 1.22?" variant="tip" />
+### `minecraft:break_sound` <Badge text="Since 1.21.5" variant="tip" />
 
 - When present, this sound will be played when the item runs out of durability and breaks
 - If not present, no sound will be played on break
@@ -921,13 +923,13 @@ Example: crafting an enchanted potato
 - Format: sound event
   - e.g. `break_sound='item.wolf_armor.break'`
 
-### `minecraft:provides_banner_patterns` <Badge text="Since 1.22?" variant="tip" />
+### `minecraft:provides_banner_patterns` <Badge text="Since 1.21.5" variant="tip" />
 
 - When present, this item can be placed in the pattern slot of a Loom
 - Format: hash-prefixed banner pattern tag
   - e.g. `provides_banner_patterns='#minecraft:pattern_item/globe'`
 
-### `minecraft:provides_trim_material` <Badge text="Since 1.22?" variant="tip" />
+### `minecraft:provides_trim_material` <Badge text="Since 1.21.5" variant="tip" />
 
 - When present, this item will provide the specified trim material when used in a trimming recipe
 - Note that to be used in the built-in smithing recipes, the item must also be in the `#trim_material` tag
@@ -935,7 +937,7 @@ Example: crafting an enchanted potato
 - Format: trim material id
   - e.g. `provides_trim_material='minecraft:iron'`
 
-### `minecraft:tooltip_display` <Badge text="Since 1.22?" variant="tip" />
+### `minecraft:tooltip_display` <Badge text="Since 1.21.5" variant="tip" />
 
 - This component allows the tooltips provided specifically by any given item component to be suppressed
 - This replaces the previous `show_in_tooltip` fields, `hide_additional_tooltip` and `hide_tooltip` components
