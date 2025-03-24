@@ -14,6 +14,8 @@ import { Badge, Aside } from "@astrojs/starlight/components";
 Custom item models allow developers to specify what model/texture to use when rendering items in Minecraft.
 The concept of custom models has exited in-game for a long time, but was overhauled in 1.21.4.
 
+More detailed instructions for resource packs are available at [guide.love-tolerance.com](https://guide.love-tolerance.com/java-resource-pack/).
+
 Content on this page is largely pulled from the official Minecraft patch notes, with light editing and formatting.
 
 ## Model syntax
@@ -116,13 +118,13 @@ These are used by the [`minecraft:model`](#minecraftmodel) item model type.
 
 - Returns a constant RGB colour
 - Fields:
-  - `value`: A packed integer RGB value (e.g. `-1`) or an array of RGB values (e.g. `[ 1, 1, 1 ]`)
+  - `value`: A [packed integer RGB value](/other/colours/#packed-integer-format) (e.g. `-1`) or an array of [RGB channel percentages](/other/colours/#channel-percentages-array-format) (e.g. `[ 1, 1, 1 ]`)
 
 ### `minecraft:dye`
 
 - Returns value from [`minecraft:dyed_color` component](../item-components/#minecraftdyed_color) or `default` if not present
 - Fields:
-  - `default`: RGB value
+  - `default`: RGB value ([packed integer](/other/colours/#packed-integer-format) or [channel percentages](/other/colours/#channel-percentages-array-format))
 
 ### `minecraft:grass`
 
@@ -136,7 +138,7 @@ These are used by the [`minecraft:model`](#minecraftmodel) item model type.
 
 - Returns average of colours from [`minecraft:firework_explosion` component](../item-components/#minecraftfirework_explosion) or `default` colour if there are none
 - Fields:
-  - `default`: RGB value
+  - `default`: RGB value ([packed integer](/other/colours/#packed-integer-format) or [channel percentages](/other/colours/#channel-percentages-array-format))
 
 ### `minecraft:potion`
 
@@ -147,13 +149,13 @@ These are used by the [`minecraft:model`](#minecraftmodel) item model type.
     - average of effect colours, otherwise
   - default colour, otherwise
 - Fields:
-  - `default`: RGB value
+  - `default`: RGB value ([packed integer](/other/colours/#packed-integer-format) or [channel percentages](/other/colours/#channel-percentages-array-format))
 
 ### `minecraft:map_color`
 
 - Return value from [`minecraft:map_color` component](../item-components/#minecraftmap_color) or `default` colour if component is not present
 - Fields:
-  - `default`: RGB value
+  - `default`: RGB value ([packed integer](/other/colours/#packed-integer-format) or [channel percentages](/other/colours/#channel-percentages-array-format))
 
 ### `minecraft:custom_model_data` (tint source)
 
@@ -165,7 +167,8 @@ These are used by the [`minecraft:model`](#minecraftmodel) item model type.
 
 - Returns team colour of context entity, if any
 - Fields:
-  - `default`: RGB value to return when there is no context entity, entity is not in a team or team has no colour
+  - `default`: RGB value ([packed integer](/other/colours/#packed-integer-format) or [channel percentages](/other/colours/#channel-percentages-array-format))
+    - returned when there is no context entity, entity is not in a team or team has no colour
 
 ## Boolean properties
 

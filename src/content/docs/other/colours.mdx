@@ -2,9 +2,57 @@
 title: Colour reference
 ---
 
-### 16 core colours
+import { ColourConverter } from "../../../components/ColourConverter.tsx";
 
-These are used in several places, such as [shields](../../items/item-components/#minecraftbase_color), [banners](../../items/item-models/#minecraftbanner), and text components.
+## RGB Colours
+
+Minecraft has several ways of specifying colours. The [16 core colours](#16-core-colours) are often the easiest way, but usually only available for things colourable in normal gameplay. Most technical systems require the use of one of several RGB formats, such as [packed integers](#packed-integer-format), [channel percentage arrays](#channel-percentages-array-format), or the well-known Hex Colours.
+
+### Minecraft RGB Colour format converter
+
+<ColourConverter client:load />
+
+### Packed Integer format
+
+<ColourConverter client:visible defaultOpen={false} />
+
+Minecraft sometimes represents colors using a packed integer format, where an RGB color is stored as a single decimal integer. This is achieved by encoding the Red, Green, and Blue (RGB) components into a 24-bit integer (`0xRRGGBB` in hex, or `(R << 16) | (G << 8) | B` in decimal).
+
+Each color channel (Red, Green, and Blue) is an 8-bit value (0-255), which gets packed into a single integer using this formula:
+
+```js
+Packed_Integer = (R << 16) | (G << 8) | B;
+// `<<` is a left shift and `|` is a bitwise OR
+```
+
+| Color Name | RGB (R, G, B) | Hex Code | Packed Integer |
+| ---------- | ------------- | -------- | -------------- |
+| Red        | (255, 0, 0)   | #FF0000  | 16711680       |
+| Green      | (0, 255, 0)   | #00FF00  | 65280          |
+| Blue       | (0, 0, 255)   | #0000FF  | 255            |
+| Pink       | (255, 0, 255) | #FF00FF  | 16711935       |
+
+A colour converter tool is available above to make using these colours easier.
+
+### Channel percentages (array) format
+
+<ColourConverter client:visible defaultOpen={false} />
+
+Things that use Minecraft's array RGB colour format takes a 3-item array of floating point numbers between 0 and 1 (inclusive). Each of the three floats represents a percentage of Red, Green, and Blue respectively.
+
+e.g.
+
+```
+[1.0, 0, 0.0] // Red
+[0.475, 0.000, 0.631] // Purple
+[0.427, 0.506, 0.588] // Slate grey
+```
+
+A colour converter tool is available above to make using these colours easier.
+
+## 16 core colours
+
+Commonly used in game for dyes and coloured blocks, these colours are also used in several technical areas, often where RGB colours aren't. Examples include [shields](../../items/item-components/#minecraftbase_color), [banners](../../items/item-models/#minecraftbanner), and text components.
 
 - `white`
 - `orange`

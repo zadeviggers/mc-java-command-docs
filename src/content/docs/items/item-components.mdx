@@ -208,8 +208,8 @@ Example: crafting an enchanted potato
 
 - Represents a color applied to a dyeable item (in the `#minecraft:dyeable` item tag)
 - Format: RGB value
-  - e.g. `dyed_color=16711680` (integer format)
-  - e.g. `dyed_color=[0.5, 1.0, 0.2]` (array format)
+  - e.g. `dyed_color=16711680` [(integer format)](/other/colours/#packed-integer-format)
+  - e.g. `dyed_color=[0.5, 1.0, 0.2]` [(array format)](/other/colours/#channel-percentages-array-format)
 - To modify the tooltip, see [`minecraft:tooltip_display`](#minecrafttooltip_display)
 
 ### `minecraft:attribute_modifiers` <Badge text="Changed in 1.21.5" variant="caution" />
@@ -269,7 +269,7 @@ Example: crafting an enchanted potato
 ### `minecraft:map_color`
 
 - Represents the tint of the decorations on the Filled Map item
-- Format: integer, RGB value
+- Format: [integer, RGB value](/other/colours/#packed-integer-format)
   - e.g. `map_color=16711680`
 - On Filled Maps, has an implicit default value of: `4603950`
 
@@ -344,7 +344,7 @@ Example: crafting an enchanted potato
   - `potion`: potion id (optional)
     - The potion type in this item: the item will inherit all effects from this
     - A list of IDs is available at the bottom of the item data section of the [potions wiki page](https://minecraft.wiki/w/Potion#Item_data)
-  - `custom_color`: integer, RGB value (optional)
+  - `custom_color`: [integer, RGB value](/other/colours/#packed-integer-format) (optional)
     - Overrides the visual color of the potion
   - `custom_effects`: list of effect instances (default: `[]`)
     - Additional list of custom effects that this item should apply, that may not be representable by an existing potion
@@ -485,9 +485,9 @@ Example: crafting an enchanted potato
     - `star`
     - `creeper`
     - `burst`
-  - `colors`: integer array, RGB values (default: `[]`)
+  - `colors`: integer array, [RGB values](/other/colours/#packed-integer-format) (default: `[]`)
     - List of initial particle colors, randomly selected from
-  - `fade_colors`: integer array, RGB values (default: `[]`)
+  - `fade_colors`: integer array, [RGB values](/other/colours/#packed-integer-format) (default: `[]`)
     - List of particle colors to fade to, randomly selected from
   - `has_trail`: boolean (default: `false`)
   - `has_twinkle`: boolean (default: `false`)
@@ -946,4 +946,4 @@ Example: crafting an enchanted potato
     - If true, the item will have no tooltip when hovered
   - `hidden_components`: list of item component ids (default: ~)
     - The tooltips provided by any component in this list will be hidden
-    - If that component provides no tooltip, it will have no effect
+    - If that component provides no tooltip, it will have no effectimport { Aside, Badge } from "@astrojs/starlight/components";import { Aside, Badge } from "@astrojs/starlight/components";import { Aside, Badge } from "@astrojs/starlight/components";
