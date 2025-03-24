@@ -1,12 +1,12 @@
 ---
-import { Badge } from "@astrojs/starlight/components";
+import VersionBadge from "../VersionBadge.astro";
 
 const { siteTitle, siteTitleHref } = Astro.props;
 ---
 
 <div class="title-wrapper sl-flex">
   <a href={siteTitleHref} class="site-title">{siteTitle}</a>
-  <Badge text="Updated for 1.21.4" variant="success" class="update-label" />
+  <VersionBadge class="update-label" />
 </div>
 
 <style>
@@ -21,8 +21,8 @@ const { siteTitle, siteTitleHref } = Astro.props;
     text-decoration: none;
     white-space: nowrap;
   }
-  @media screen and (max-width: 660px) {
-    .update-label {
+  @media (max-width: 50rem) {
+    :global(.update-label) {
       display: none;
     }
   }

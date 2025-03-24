@@ -17,7 +17,8 @@ export default defineConfig({
         github: "https://github.com/zadeviggers/mc-java-command-docs",
       },
       components: {
-        SiteTitle: "./src/components/SiteTitle.astro",
+        SiteTitle: "./src/components/override/SiteTitle.astro",
+        // MobileMenuFooter: "./src/components/override/MobileMenuFooter.astro",
       },
       sidebar: [
         {
